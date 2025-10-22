@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuiz Bahasa Melayu Tahun 4 - Set A</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .timer {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .btn {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #45a049;
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+        }
+
+        .btn-secondary:hover {
+            background: #1976D2;
+        }
+
+        .btn-danger {
+            background: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .material {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .question {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            margin-top: 15px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .option:hover {
+            background: #f0f0f0;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .results {
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .correct {
+            border-left: 5px solid #4CAF50;
+        }
+
+        .incorrect {
+            border-left: 5px solid #f44336;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .timer {
+                font-size: 1rem;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Kuiz Bahasa Melayu Tahun 4 - Set A</h1>
+            <div class="timer hidden" id="timer">⏱️ Masa: 00:00</div>
+        </div>
+
+        <!-- Skrin Mula -->
+        <div id="startScreen" class="content">
+            <h2>Selamat Datang!</h2>
+            <p>Kuiz ini mengandungi 10 soalan dan akan mengambil masa kira-kira 15-20 minit.</p>
+            
+            <div class="form-group">
+                <label for="studentName">Nama Murid:</label>
+                <input type="text" id="studentName" placeholder="Masukkan nama penuh anda" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="studentClass">Kelas:</label>
+                <input type="text" id="studentClass" placeholder="Contoh: 4 Bestari" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="studentSchool">Sekolah:</label>
+                <input type="text" id="studentSchool" placeholder="Contoh: SK Taman Desa" required>
+            </div>
+            
+            <button class="btn" onclick="startQuiz()">🚀 Mula Kuiz</button>
+        </div>
+
+        <!-- Skrin Kuiz -->
+        <div id="quizScreen" class="content hidden">
+            <!-- Bahagian A -->
+            <div class="section">
+                <div class="section-title">Bahagian A</div>
+                <div class="material">
+                    <p><strong>Pilih jawapan yang paling sesuai.</strong></p>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 1:</div>
+                    <p>Haziq memimpin warga emas itu ketika melintas ________.</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q1" value="A" id="q1a">
+                            <label for="q1a">A) titi</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" value="B" id="q1b">
+                            <label for="q1b">B) jalan</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" value="C" id="q1c">
+                            <label for="q1c">C) jeti</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" value="D" id="q1d">
+                            <label for="q1d">D) jejantas</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 2:</div>
+                    <p>Tong sampah di dapur itu berbau ________ kerana minyak lama.</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q2" value="A" id="q2a">
+                            <label for="q2a">A) hanyir</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q2" value="B" id="q2b">
+                            <label for="q2b">B) busuk</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q2" value="C" id="q2c">
+                            <label for="q2c">C) hamis</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q2" value="D" id="q2d">
+                            <label for="q2d">D) tengik</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 3:</div>
+                    <p>Pilih ayat yang betul.</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q3" value="A" id="q3a">
+                            <label for="q3a">A) Bilakah kamu menyiapkan kerja sekolah ini?</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q3" value="B" id="q3b">
+                            <label for="q3b">B) Siapakah umur adik kamu?</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q3" value="C" id="q3c">
+                            <label for="q3c">C) Di manakah cara membuat roti canai?</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q3" value="D" id="q3d">
+                            <label for="q3d">D) Apakah kamu pergi ke pasar semalam?</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bahagian B -->
+            <div class="section">
+                <div class="section-title">Bahagian B</div>
+                <div class="material">
+                    <p><strong>Baca petikan, kemudian jawab soalan 4–6.</strong></p>
+                    <p>Balqis menyambut hari lahirnya yang kesembilan di kelas Empat Cemerlang. Ibunya menyediakan aneka makanan dan minuman. Cikgu Zainab dan Rina menghias kelas dengan reben berwarna-warni. Mereka menyanyikan lagu "Selamat Hari Lahir" ketika Balqis meniup lilin. Haziq menghadiahkan botol minuman, manakala Mira memberikan buku cerita. Balqis turut menerima hadiah lain seperti gelang, stokin, tabung, jam dan kek kukus.</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 4:</div>
+                    <p>Siapakah yang menyambut hari lahir kesembilan?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q4" value="A" id="q4a">
+                            <label for="q4a">A) Haziq</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q4" value="B" id="q4b">
+                            <label for="q4b">B) Mira</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q4" value="C" id="q4c">
+                            <label for="q4c">C) Balqis</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q4" value="D" id="q4d">
+                            <label for="q4d">D) Rina</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 5:</div>
+                    <p>Pilih pernyataan yang benar.</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q5" value="A" id="q5a">
+                            <label for="q5a">A) Rina menghadiahkan botol minuman.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q5" value="B" id="q5b">
+                            <label for="q5b">B) Lagu "Selamat Hari Lahir" dinyanyikan ketika Balqis meniup lilin.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q5" value="C" id="q5c">
+                            <label for="q5c">C) Cikgu Zainab dan Haziq menghias kelas.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q5" value="D" id="q5d">
+                            <label for="q5d">D) Ibu Balqis menghadiahkan buku cerita.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 6:</div>
+                    <p>Berikut ialah hadiah yang diterima Balqis berdasarkan petikan, kecuali</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q6" value="A" id="q6a">
+                            <label for="q6a">A) gelang dan tabung</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q6" value="B" id="q6b">
+                            <label for="q6b">B) buku cerita dan jam</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q6" value="C" id="q6c">
+                            <label for="q6c">C) stokin dan botol minuman</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q6" value="D" id="q6d">
+                            <label for="q6d">D) reben dan belon</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bahagian C -->
+            <div class="section">
+                <div class="section-title">Bahagian C</div>
+                <div class="material">
+                    <p><strong>Baca Bahan 1 dan Bahan 2, kemudian jawab soalan 7–10.</strong></p>
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #ffc107;">
+                        <h4 style="color: #856404; margin-top: 0;">Bahan 1:</h4>
+                        <p>Aminah dan rakan-rakannya berlatih bercerita setiap petang selama dua bulan. Pada hari pertandingan, mereka bercerita dengan jelas dan yakin berbanding pasukan lain. Keputusan: tempat kedua. Hadiah: RM400 dan sijil penyertaan. Mereka berasa bangga kerana mengharumkan nama sekolah.</p>
+                    </div>
+                    <div style="background: #d1ecf1; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #17a2b8;">
+                        <h4 style="color: #0c5460; margin-top: 0;">Bahan 2:</h4>
+                        <p>Pertandingan Bercerita Sekolah Rendah – Bulan Bahasa 2025. Tarikh: 15 Mei 2025. Masa: 8.00 pagi. Tempat: Dewan Seri Bestari, SK Maju. Juara: RM700 & Sijil Penghargaan. Syarat: Terbuka kepada murid Tahap 2.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 7:</div>
+                    <p>Aminah dan rakan-rakan bersedia menyertai pertandingan kerana…</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q7" value="A" id="q7a">
+                            <label for="q7a">A) berasa sangat bangga.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q7" value="B" id="q7b">
+                            <label for="q7b">B) telah berlatih selama dua bulan.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q7" value="C" id="q7c">
+                            <label for="q7c">C) telah mengharumkan nama sekolah.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q7" value="D" id="q7d">
+                            <label for="q7d">D) belum jelas pertuturannya.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 8:</div>
+                    <p>Penjodoh bilangan yang sesuai bagi perkataan 'sijil' ialah…</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q8" value="A" id="q8a">
+                            <label for="q8a">A) keping</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q8" value="B" id="q8b">
+                            <label for="q8b">B) lembar</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q8" value="C" id="q8c">
+                            <label for="q8c">C) bidang</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q8" value="D" id="q8d">
+                            <label for="q8d">D) helai</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 9:</div>
+                    <p>Perkataan 'pertandingan' boleh digantikan dengan…</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q9" value="A" id="q9a">
+                            <label for="q9a">A) penghargaan</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q9" value="B" id="q9b">
+                            <label for="q9b">B) peraduan</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q9" value="C" id="q9c">
+                            <label for="q9c">C) penyertaan</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q9" value="D" id="q9d">
+                            <label for="q9d">D) perlawanan</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-number">Soalan 10:</div>
+                    <p>Pilih pernyataan yang benar tentang Bahan 1 dan Bahan 2.</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q10" value="A" id="q10a">
+                            <label for="q10a">A) Kumpulan Aminah memenangi hadiah RM700.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q10" value="B" id="q10b">
+                            <label for="q10b">B) Pertandingan dalam Bahan 2 terbuka kepada murid Tahap 2.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q10" value="C" id="q10c">
+                            <label for="q10c">C) Kumpulan Aminah menyertai deklamasi sajak.</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q10" value="D" id="q10d">
+                            <label for="q10d">D) Juara pertandingan dalam Bahan 2 menerima RM400.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="submitQuiz()">📝 Hantar Jawapan</button>
+            </div>
+        </div>
+
+        <!-- Skrin Keputusan -->
+        <div id="resultScreen" class="content hidden">
+            <div class="results">
+                <h2>🎉 Keputusan Kuiz</h2>
+                <div class="score-display" id="scoreDisplay"></div>
+                <div id="timeDisplay"></div>
+                <div id="detailedResults"></div>
+                
+                <div style="margin-top: 30px;">
+                    <button class="btn" onclick="tryAgain()">🔄 Cuba Lagi</button>
+                    <button class="btn btn-secondary" onclick="printResults()">🖨️ Cetak Keputusan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pemalar untuk Google Apps Script Web App URL
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxJ_MLQ0t6dAYamUmcUgAZKZCW9IlQu6boeYmrtnv6xHnngDyVx7pY2_waWrbRufXE/exec";
+        
+        // Jawapan yang betul
+        const correctAnswers = {
+            q1: 'B', q2: 'D', q3: 'A', q4: 'C', q5: 'B',
+            q6: 'D', q7: 'B', q8: 'A', q9: 'B', q10: 'B'
+        };
+
+        // Pembolehubah global
+        let startTime;
+        let timerInterval;
+        let quizData = {};
+
+        function startQuiz() {
+            const name = document.getElementById('studentName').value.trim();
+            const className = document.getElementById('studentClass').value.trim();
+            const school = document.getElementById('studentSchool').value.trim();
+            
+            if (!name || !className || !school) {
+                alert('Sila masukkan nama, kelas dan sekolah anda.');
+                return;
+            }
+            
+            quizData.nama = name;
+            quizData.kelas = className;
+            quizData.sekolah = school;
+            
+            // Tukar ke skrin kuiz
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            document.getElementById('timer').classList.remove('hidden');
+            
+            // Mula pemasa
+            startTime = new Date();
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const elapsed = Math.floor((now - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                
+                document.getElementById('timer').textContent = 
+                    `⏱️ Masa: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function submitQuiz() {
+            // Hentikan pemasa
+            clearInterval(timerInterval);
+            const endTime = new Date();
+            const duration = Math.floor((endTime - startTime) / 1000);
+            
+            // Kumpul jawapan
+            const answers = [];
+            let score = 0;
+            
+            for (let i = 1; i <= 10; i++) {
+                const questionName = `q${i}`;
+                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+                const chosen = selectedOption ? selectedOption.value : '';
+                const correct = correctAnswers[questionName];
+                const isCorrect = chosen === correct;
+                
+                if (isCorrect) score++;
+                
+                answers.push({
+                    q: i,
+                    chosen: chosen,
+                    correct: correct,
+                    isCorrect: isCorrect
+                });
+            }
+            
+            const percent = Math.round((score / 10) * 100);
+            
+            // Simpan data keputusan
+            quizData.score = score;
+            quizData.percent = percent;
+            quizData.duration_sec = duration;
+            quizData.answers = answers;
+            
+            // Papar keputusan
+            displayResults(score, percent, duration, answers);
+            
+            // Hantar ke Google Sheets
+            sendToGoogleSheets();
+            
+            // Tukar ke skrin keputusan
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+        }
+
+        function displayResults(score, percent, duration, answers) {
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            
+            document.getElementById('scoreDisplay').textContent = `${score}/10 (${percent}%)`;
+            document.getElementById('timeDisplay').innerHTML = 
+                `<p><strong>Masa Diambil:</strong> ${minutes} minit ${seconds} saat</p>`;
+            
+            let detailsHTML = '<h3>Analisis Jawapan:</h3>';
+            
+            const questionTexts = [
+                'Haziq memimpin warga emas itu ketika melintas ________.',
+                'Tong sampah di dapur itu berbau ________ kerana minyak lama.',
+                'Pilih ayat yang betul.',
+                'Siapakah yang menyambut hari lahir kesembilan?',
+                'Pilih pernyataan yang benar.',
+                'Berikut ialah hadiah yang diterima Balqis berdasarkan petikan, kecuali',
+                'Aminah dan rakan-rakan bersedia menyertai pertandingan kerana…',
+                'Penjodoh bilangan yang sesuai bagi perkataan \'sijil\' ialah…',
+                'Perkataan \'pertandingan\' boleh digantikan dengan…',
+                'Pilih pernyataan yang benar tentang Bahan 1 dan Bahan 2.'
+            ];
+            
+            answers.forEach((answer, index) => {
+                const resultClass = answer.isCorrect ? 'correct' : 'incorrect';
+                const icon = answer.isCorrect ? '✅' : '❌';
+                
+                detailsHTML += `
+                    <div class="result-item ${resultClass}">
+                        <strong>${icon} Soalan ${answer.q}:</strong> ${questionTexts[index]}<br>
+                        <strong>Jawapan Anda:</strong> ${answer.chosen || 'Tidak dijawab'}<br>
+                        <strong>Jawapan Betul:</strong> ${answer.correct}
+                    </div>
+                `;
+            });
+            
+            document.getElementById('detailedResults').innerHTML = detailsHTML;
+        }
+
+        function sendToGoogleSheets() {
+            const payload = {
+                timestamp: new Date().toISOString(),
+                set_id: "Set A",
+                nama: quizData.nama,
+                kelas: quizData.kelas,
+                sekolah: quizData.sekolah,
+                score: quizData.score,
+                percent: quizData.percent,
+                duration_sec: quizData.duration_sec,
+                answers: quizData.answers,
+                user_agent: navigator.userAgent
+            };
+            
+            // Hantar data ke Google Apps Script
+            if (WEB_APP_URL && WEB_APP_URL !== "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+                fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                }).catch(error => {
+                    console.log('Data telah dihantar ke Google Sheets');
+                });
+            }
+        }
+
+        function tryAgain() {
+            // Reset semua input
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentClass').value = '';
+            document.getElementById('studentSchool').value = '';
+            
+            // Reset semua radio button
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => radio.checked = false);
+            
+            // Reset pembolehubah
+            quizData = {};
+            clearInterval(timerInterval);
+            
+            // Kembali ke skrin mula
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+            document.getElementById('timer').classList.add('hidden');
+        }
+
+        function printResults() {
+            window.print();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9929624b3363cf0c',t:'MTc2MTE0MDE5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
