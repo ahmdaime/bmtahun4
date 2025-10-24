@@ -309,6 +309,110 @@
             display: none;
         }
 
+        /* Review Screen Styles */
+        .review-question {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .review-question.correct {
+            border-left: 5px solid #4CAF50;
+        }
+
+        .review-question.incorrect {
+            border-left: 5px solid #f44336;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .review-status {
+            margin-left: 10px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            color: white;
+        }
+
+        .review-status.correct {
+            background: #4CAF50;
+        }
+
+        .review-status.incorrect {
+            background: #f44336;
+        }
+
+        .review-content {
+            margin-bottom: 15px;
+        }
+
+        .review-answers {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .user-answer {
+            margin-bottom: 10px;
+        }
+
+        .correct-answer {
+            margin-bottom: 10px;
+        }
+
+        .answer-label {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .user-answer .answer-label {
+            color: #666;
+        }
+
+        .correct-answer .answer-label {
+            color: #4CAF50;
+        }
+
+        .incorrect .user-answer .answer-label {
+            color: #f44336;
+        }
+
+        .review-options {
+            margin-top: 10px;
+        }
+
+        .review-option {
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .review-option.user-selected {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+
+        .review-option.correct-answer {
+            background: #e8f5e8;
+            border-color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .review-option.both-selected {
+            background: #e8f5e8;
+            border-color: #4CAF50;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
@@ -388,9 +492,25 @@
                 <div id="detailedResults"></div>
                 
                 <div style="margin-top: 30px;">
+                    <button class="btn btn-secondary" id="reviewAnswersBtn">🔍 Semak Jawapan</button>
                     <button class="btn" id="tryAgainBtn">🔄 Cuba Lagi</button>
                     <button class="btn btn-secondary" id="printResultsBtn">🖨️ Cetak Keputusan</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Review Screen -->
+        <div id="reviewScreen" class="content hidden">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2>🔍 Semakan Jawapan</h2>
+                <p>Lihat jawapan anda dan jawapan yang betul untuk setiap soalan.</p>
+            </div>
+            
+            <div id="reviewContainer"></div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" id="backToResultsBtn">⬅️ Kembali ke Keputusan</button>
+                <button class="btn" id="tryAgainFromReviewBtn">🔄 Cuba Lagi</button>
             </div>
         </div>
     </div>
@@ -992,6 +1112,188 @@
             }
         }
 
+        function showReviewScreen() {
+            // Generate review content
+            generateReviewContent();
+            
+            // Switch to review screen
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('reviewScreen').classList.remove('hidden');
+        }
+
+        function generateReviewContent() {
+            const container = document.getElementById('reviewContainer');
+            container.innerHTML = '';
+            
+            let globalQuestionNumber = 1;
+            
+            QUIZ_DATA.sections.forEach(section => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section';
+                
+                let sectionHTML = `<div class="section-title">${section.title}</div>`;
+                
+                // Add instruction
+                if (section.instruction) {
+                    sectionHTML += `<div class="material"><p><strong>${section.instruction}</strong></p></div>`;
+                }
+                
+                // Add content (for reading passages)
+                if (section.content) {
+                    sectionHTML += `<div class="material" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+                        <h4 style="color: #856404; margin-top: 0;">Petikan:</h4>
+                        <p>${section.content}</p>
+                    </div>`;
+                }
+                
+                // Add content1 and content2 (for dual materials)
+                if (section.content1 && section.content2) {
+                    sectionHTML += `
+                        <div class="material" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+                            <h4 style="color: #856404; margin-top: 0;">Bahan 1:</h4>
+                            <p>${section.content1}</p>
+                        </div>
+                        <div class="material" style="background: #d1ecf1; border-left: 4px solid #17a2b8;">
+                            <h4 style="color: #0c5460; margin-top: 0;">Bahan 2:</h4>
+                            <p>${section.content2}</p>
+                        </div>
+                    `;
+                }
+                
+                sectionDiv.innerHTML = sectionHTML;
+                
+                section.items.forEach((item, index) => {
+                    const result = quizData.results.find(r => r.q === item.id);
+                    const isCorrect = result ? result.isCorrect : false;
+                    
+                    const reviewDiv = document.createElement('div');
+                    reviewDiv.className = `review-question ${isCorrect ? 'correct' : 'incorrect'}`;
+                    
+                    let reviewHTML = `
+                        <div class="review-header">
+                            <span>Soalan ${globalQuestionNumber}:</span>
+                            <span class="review-status ${isCorrect ? 'correct' : 'incorrect'}">
+                                ${isCorrect ? '✅ Betul' : '❌ Salah'}
+                            </span>
+                        </div>
+                        <div class="review-content">
+                            <p><strong>${item.q}</strong></p>
+                            ${generateReviewAnswerHTML(item, result)}
+                        </div>
+                    `;
+                    
+                    reviewDiv.innerHTML = reviewHTML;
+                    sectionDiv.appendChild(reviewDiv);
+                    globalQuestionNumber++;
+                });
+                
+                container.appendChild(sectionDiv);
+            });
+        }
+
+        function generateReviewAnswerHTML(item, result) {
+            const userAnswer = result ? result.value : '';
+            const correctAnswer = getCorrectAnswer(item);
+            
+            let html = '<div class="review-answers">';
+            
+            switch(item.type) {
+                case 'mcq':
+                    html += `
+                        <div class="user-answer">
+                            <span class="answer-label">Jawapan Anda:</span>
+                            ${formatUserAnswer(userAnswer, item.type)}
+                        </div>
+                        <div class="correct-answer">
+                            <span class="answer-label">Jawapan Betul:</span>
+                            ${correctAnswer}
+                        </div>
+                        <div class="review-options">
+                            ${item.options.map(option => {
+                                const optionLetter = option.charAt(0);
+                                let optionClass = '';
+                                
+                                if (userAnswer === optionLetter && correctAnswer === optionLetter) {
+                                    optionClass = 'both-selected';
+                                } else if (correctAnswer === optionLetter) {
+                                    optionClass = 'correct-answer';
+                                } else if (userAnswer === optionLetter) {
+                                    optionClass = 'user-selected';
+                                }
+                                
+                                return `<div class="review-option ${optionClass}">${option}</div>`;
+                            }).join('')}
+                        </div>
+                    `;
+                    break;
+                    
+                case 'text':
+                    html += `
+                        <div class="user-answer">
+                            <span class="answer-label">Jawapan Anda:</span>
+                            "${formatUserAnswer(userAnswer, item.type)}"
+                        </div>
+                        <div class="correct-answer">
+                            <span class="answer-label">Jawapan Betul:</span>
+                            ${correctAnswer}
+                        </div>
+                    `;
+                    break;
+                    
+                case 'order':
+                    html += `
+                        <div class="user-answer">
+                            <span class="answer-label">Susunan Anda:</span>
+                            "${formatUserAnswer(userAnswer, item.type)}"
+                        </div>
+                        <div class="correct-answer">
+                            <span class="answer-label">Susunan Betul:</span>
+                            "${correctAnswer}"
+                        </div>
+                    `;
+                    break;
+                    
+                case 'judge':
+                    html += `
+                        <div class="user-answer">
+                            <span class="answer-label">Penilaian Anda:</span>
+                            ${formatUserAnswer(userAnswer, item.type)}
+                        </div>
+                        <div class="correct-answer">
+                            <span class="answer-label">Penilaian Betul:</span>
+                            ${correctAnswer}
+                        </div>
+                        <div style="margin-top: 10px;">
+                            ${item.s.map((statement, index) => {
+                                const userJudgment = Array.isArray(userAnswer) && userAnswer[index] ? 
+                                    (userAnswer[index] === '1' ? 'BETUL' : userAnswer[index] === '0' ? 'SALAH' : 'Tidak dijawab') : 'Tidak dijawab';
+                                const correctJudgment = statement[1] ? 'BETUL' : 'SALAH';
+                                const isStatementCorrect = userJudgment === correctJudgment;
+                                
+                                return `
+                                    <div style="margin-bottom: 8px; padding: 8px; border-radius: 5px; ${isStatementCorrect ? 'background: #e8f5e8; border: 1px solid #4CAF50;' : 'background: #ffebee; border: 1px solid #f44336;'}">
+                                        <div style="margin-bottom: 5px;"><strong>Ayat ${index + 1}:</strong> ${statement[0]}</div>
+                                        <div style="font-size: 14px;">
+                                            <span style="color: ${isStatementCorrect ? '#4CAF50' : '#f44336'};">Anda: ${userJudgment}</span> | 
+                                            <span style="color: #4CAF50;">Betul: ${correctJudgment}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                    break;
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function backToResults() {
+            document.getElementById('reviewScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+        }
+
         function tryAgain() {
             // Reset all inputs
             document.getElementById('studentName').value = '';
@@ -1005,6 +1307,7 @@
             
             // Return to start screen
             document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('reviewScreen').classList.add('hidden');
             document.getElementById('startScreen').classList.remove('hidden');
             document.getElementById('timer').classList.add('hidden');
         }
@@ -1075,8 +1378,17 @@
                 if (e.target && e.target.id === 'tryAgainBtn') {
                     tryAgain();
                 }
+                if (e.target && e.target.id === 'tryAgainFromReviewBtn') {
+                    tryAgain();
+                }
                 if (e.target && e.target.id === 'printResultsBtn') {
                     printResults();
+                }
+                if (e.target && e.target.id === 'reviewAnswersBtn') {
+                    showReviewScreen();
+                }
+                if (e.target && e.target.id === 'backToResultsBtn') {
+                    backToResults();
                 }
             });
             
@@ -1084,5 +1396,5 @@
             console.log('Kuiz Interaktif BM Tahun 4 siap digunakan!');
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9936b24c81f25348',t:'MTc2MTI3OTc4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993818e85542d48c',t:'MTc2MTI5NDQ3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
