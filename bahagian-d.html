@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Latihan Karangan Bahagian D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .writing-lines {
+            background-image: repeating-linear-gradient(
+                transparent,
+                transparent 24px,
+                #e5e7eb 24px,
+                #e5e7eb 25px
+            );
+            line-height: 25px;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-full font-sans">
+    <div class="container mx-auto px-4 py-6 max-w-6xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">📝 Sistem Latihan Karangan Bahagian D</h1>
+            <p class="text-lg text-gray-600">Latih kemahiran menulis karangan berdasarkan grafik</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Left Panel - Graph Area -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <!-- Question Instructions -->
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded mb-6">
+                    <h2 class="text-lg font-semibold text-blue-800 mb-2">📋 Arahan Soalan</h2>
+                    <p class="text-blue-700 text-sm leading-relaxed">
+                        Teliti grafik yang disediakan. Tulis sebuah karangan dalam bentuk karangan berformat atau tidak berformat. 
+                        <strong>Panjang karangan kamu hendaklah antara 50 hingga 80 patah perkataan.</strong>
+                    </p>
+                </div>
+
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+                    📊 Grafik untuk Karangan
+                </h2>
+                
+                <div id="graphArea" class="border-2 border-gray-300 rounded-lg overflow-hidden">
+                    <img src="https://i.imgur.com/p48Du2F.png" alt="Grafik aktiviti membersihkan rumah" class="w-full h-auto">
+                </div>
+
+                <!-- Writing Guidelines -->
+                <div class="mt-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                    <h3 class="font-semibold text-yellow-800 mb-3">💡 Tips Menulis Karangan:</h3>
+                    <div class="text-sm text-yellow-700 space-y-2">
+                        <div>
+                            <strong>1. Baca dan faham grafik sepenuhnya.</strong>
+                            <p class="ml-4">– Perhatikan watak, aktiviti, tempat dan masa. Jangan tergesa menulis sebelum kenal isi utama.</p>
+                        </div>
+                        <div>
+                            <strong>2. Gunakan penanda wacana.</strong>
+                            <p class="ml-4">– Contoh: Selain itu, Seterusnya, Oleh itu, Akhir sekali, Kesimpulannya. Ini menunjukkan karangan tersusun.</p>
+                        </div>
+                        <div>
+                            <strong>3. Gunakan sekurang-kurangnya tiga isi penting.</strong>
+                            <p class="ml-4">– Pastikan setiap isi dikembangkan dengan ayat sebab, akibat, atau perasaan.</p>
+                        </div>
+                        <div>
+                            <strong>4. Akhiri dengan kesimpulan atau nilai murni.</strong>
+                            <p class="ml-4">– Contoh: Kita hendaklah membantu ibu bapa agar hubungan kekeluargaan sentiasa harmoni.</p>
+                        </div>
+                        <div>
+                            <strong>5. Semak ejaan dan tanda baca.</strong>
+                            <p class="ml-4">– Elak ayat terlalu panjang. Gunakan titik noktah, koma dan huruf besar dengan betul.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Writing Area -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold text-gray-800 flex items-center">
+                        ✍️ Ruang Menulis
+                    </h2>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-600">Bilangan perkataan:</span>
+                        <span id="wordCount" class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-sm font-semibold">0</span>
+                    </div>
+                </div>
+
+                <!-- Student Info -->
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label for="studentName" class="block text-sm font-medium text-gray-700 mb-1">Nama Murid:</label>
+                        <input type="text" id="studentName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Masukkan nama">
+                    </div>
+                    <div>
+                        <label for="studentClass" class="block text-sm font-medium text-gray-700 mb-1">Kelas:</label>
+                        <input type="text" id="studentClass" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Contoh: 5A">
+                    </div>
+                    <div>
+                        <label for="studentSchool" class="block text-sm font-medium text-gray-700 mb-1">Sekolah:</label>
+                        <input type="text" id="studentSchool" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nama sekolah">
+                    </div>
+                </div>
+
+                <!-- Writing Area -->
+                <div class="mb-4">
+                    <label for="essayText" class="block text-sm font-medium text-gray-700 mb-2">Karangan:</label>
+                    <textarea 
+                        id="essayText" 
+                        class="w-full h-96 p-4 border border-gray-300 rounded-md writing-lines focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none" 
+                        placeholder="Mulakan menulis karangan anda di sini berdasarkan grafik yang diberikan..."
+                    ></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-3">
+                    <button id="submitBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center">
+                        📤 Hantar Jawapan
+                    </button>
+                    <button id="aiCheckBtn" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center">
+                        🤖 Semak dengan AI
+                    </button>
+                    <button id="clearBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center">
+                        🗑️ Kosongkan
+                    </button>
+                    <button id="printBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center">
+                        🖨️ Cetak
+                    </button>
+                </div>
+
+                <!-- AI Assessment Panel (Hidden by default) -->
+                <div id="aiAssessment" class="hidden mt-6 bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                    <h3 class="font-semibold text-blue-800 mb-3">🤖 Penilaian AI</h3>
+                    <div id="aiResults" class="space-y-4">
+                        <!-- AI results will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Sample Answer (Hidden by default) -->
+                <div id="sampleAnswer" class="hidden mt-6 bg-green-50 border-l-4 border-green-400 p-4 rounded">
+                    <h3 class="font-semibold text-green-800 mb-3">✅ Jawapan Contoh:</h3>
+                    <div class="text-sm text-green-700 leading-relaxed">
+                        <p class="mb-3">Pada cuti hujung minggu yang lalu, saya dan keluarga telah melakukan aktiviti membersihkan rumah. Seawal pagi, kami bergotong-royong untuk memastikan rumah sentiasa bersih dan kemas. Saya menyapu lantai manakala adik pula mengelap meja makan dengan bersungguh-sungguh.</p>
+                        
+                        <p class="mb-3">Selain itu, ayah memotong rumput di halaman rumah supaya kawasan luar kelihatan indah dan teratur. Ibu pula membasuh pakaian menggunakan mesin basuh. Kami semua melakukan tugas masing-masing dengan penuh tanggungjawab dan kerjasama.</p>
+                        
+                        <p class="mb-3">Aktiviti seperti ini menjadikan hubungan kami sekeluarga semakin erat. Saya berasa sangat gembira kerana dapat membantu meringankan beban ibu bapa. Rumah kami juga kelihatan bersih dan selesa selepas siap bergotong-royong.</p>
+                        
+                        <p>Kesimpulannya, kita hendaklah sentiasa membantu ibu bapa dalam kerja harian di rumah. Amalan ini dapat membentuk keluarga yang bahagia, saling menyayangi dan bekerjasama. Rumah yang bersih menenangkan hati dan mencerminkan keluarga yang berdisiplin.</p>
+                    </div>
+                    <div class="mt-3 text-xs text-green-600">
+                        <strong>Bilangan perkataan:</strong> 156 perkataan (Nota: Ini melebihi had 80 perkataan untuk tujuan contoh lengkap)
+                    </div>
+                </div>
+
+                <!-- Progress Indicator -->
+                <div class="mt-6 bg-gray-50 rounded-lg p-4">
+                    <h3 class="font-semibold text-gray-800 mb-2">📈 Kemajuan Penulisan:</h3>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progressBar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <p id="progressText" class="text-sm text-gray-600 mt-1">Mula menulis untuk melihat kemajuan</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="hidden fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg fade-in">
+            ✅ Karangan berjaya disimpan!
+        </div>
+    </div>
+
+    <script>
+        // Google Sheets Integration - Must be declared first
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyVTgraTnZ9OWvWasNkPdtq0Pc_qNnWYnCUZJjkNbFKpyvuV9bl3Y7li8C5LwbD5yST/exec';
+
+        // Word count functionality
+        const essayText = document.getElementById('essayText');
+        const wordCount = document.getElementById('wordCount');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+
+        function updateWordCount() {
+            const text = essayText.value.trim();
+            const words = text === '' ? 0 : text.split(/\s+/).length;
+            wordCount.textContent = words;
+            
+            // Update progress (target: 50-80 words as per question requirement)
+            const targetWords = 80;
+            const progress = Math.min((words / targetWords) * 100, 100);
+            progressBar.style.width = progress + '%';
+            
+            if (words === 0) {
+                progressText.textContent = 'Mula menulis untuk melihat kemajuan';
+            } else if (words < 25) {
+                progressText.textContent = 'Teruskan menulis! Sasaran: 50-80 perkataan';
+            } else if (words < 50) {
+                progressText.textContent = 'Bagus! Hampir mencapai sasaran minimum 50 perkataan';
+            } else if (words <= 80) {
+                progressText.textContent = 'Excellent! Karangan dalam julat yang sesuai (50-80 perkataan)';
+            } else {
+                progressText.textContent = 'Karangan melebihi had maksimum 80 perkataan. Sila pendekkan.';
+            }
+        }
+
+        essayText.addEventListener('input', updateWordCount);
+
+        // AI Assessment functionality
+        document.getElementById('aiCheckBtn').addEventListener('click', function() {
+            const essay = essayText.value.trim();
+
+            if (!essay) {
+                showMessage('Sila tulis karangan terlebih dahulu sebelum semakan AI.', 'error');
+                return;
+            }
+
+            // Show loading state
+            const aiResults = document.getElementById('aiResults');
+            aiResults.innerHTML = '<div class="text-center py-4"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div><p class="mt-2 text-sm text-gray-600">AI sedang menilai karangan...</p></div>';
+            document.getElementById('aiAssessment').classList.remove('hidden');
+
+            // Simulate AI assessment (replace with actual AI API call)
+            setTimeout(() => {
+                const assessment = assessEssay(essay);
+                displayAIAssessment(assessment);
+            }, 2000);
+        });
+
+        function assessEssay(essay) {
+            const wordCount = essay.split(/\s+/).length;
+            
+            // Simple AI assessment simulation based on rubric
+            let ideaScore = 0;
+            let languageScore = 0;
+            let organizationScore = 0;
+            
+            // Idea assessment (0-7 points)
+            if (essay.toLowerCase().includes('keluarga') || essay.toLowerCase().includes('rumah') || essay.toLowerCase().includes('bersih')) {
+                ideaScore += 3; // Relevant to topic
+            }
+            if (essay.includes('Selain itu') || essay.includes('Seterusnya') || essay.includes('Kesimpulannya')) {
+                ideaScore += 2; // Good connectors
+            }
+            if (wordCount >= 50 && wordCount <= 80) {
+                ideaScore += 2; // Appropriate length
+            }
+            
+            // Language assessment (0-7 points)
+            const sentences = essay.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            if (sentences.length >= 4) {
+                languageScore += 2; // Good sentence variety
+            }
+            if (essay.includes(',') && essay.includes('.')) {
+                languageScore += 2; // Proper punctuation
+            }
+            const commonErrors = ['sya', 'dgan', 'untk', 'yg'];
+            const hasErrors = commonErrors.some(error => essay.toLowerCase().includes(error));
+            if (!hasErrors) {
+                languageScore += 3; // No obvious spelling errors
+            }
+            
+            // Organization assessment (0-6 points)
+            if (sentences.length >= 3) {
+                organizationScore += 2; // Multiple paragraphs/ideas
+            }
+            if (essay.toLowerCase().includes('kesimpulan') || essay.toLowerCase().includes('akhir')) {
+                organizationScore += 2; // Has conclusion
+            }
+            if (wordCount >= 50) {
+                organizationScore += 2; // Adequate development
+            }
+            
+            const totalScore = ideaScore + languageScore + organizationScore;
+            
+            // Determine grade based on total score
+            let grade, color, feedback;
+            if (totalScore >= 18) {
+                grade = 'Cemerlang (18-20 markah)';
+                color = 'green';
+                feedback = 'Karangan amat baik! Menepati semua kriteria dengan cemerlang.';
+            } else if (totalScore >= 15) {
+                grade = 'Kepujian (15-17 markah)';
+                color = 'yellow';
+                feedback = 'Karangan baik dengan beberapa aspek yang boleh diperbaiki.';
+            } else if (totalScore >= 13) {
+                grade = 'Baik (13-14 markah)';
+                color = 'blue';
+                feedback = 'Karangan mencapai standard yang baik.';
+            } else if (totalScore >= 8) {
+                grade = 'Memuaskan (8-12 markah)';
+                color = 'orange';
+                feedback = 'Karangan perlu penambahbaikan dalam beberapa aspek.';
+            } else if (totalScore >= 3) {
+                grade = 'Tahap Penguasaan Minimum (3-7 markah)';
+                color = 'red';
+                feedback = 'Karangan memerlukan banyak penambahbaikan.';
+            } else {
+                grade = 'Tidak Mencapai Tahap Minimum (0-2 markah)';
+                color = 'gray';
+                feedback = 'Karangan perlu ditulis semula dengan lebih teliti.';
+            }
+            
+            return {
+                totalScore,
+                grade,
+                color,
+                feedback,
+                ideaScore,
+                languageScore,
+                organizationScore,
+                wordCount
+            };
+        }
+
+        function displayAIAssessment(assessment) {
+            const aiResults = document.getElementById('aiResults');
+            
+            aiResults.innerHTML = `
+                <div class="bg-${assessment.color}-100 border border-${assessment.color}-300 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-semibold text-${assessment.color}-800">Markah Keseluruhan</h4>
+                        <span class="bg-${assessment.color}-200 text-${assessment.color}-800 px-3 py-1 rounded-full font-bold">${assessment.totalScore}/20</span>
+                    </div>
+                    <p class="text-${assessment.color}-700 font-medium mb-2">${assessment.grade}</p>
+                    <p class="text-${assessment.color}-600 text-sm">${assessment.feedback}</p>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-white border rounded-lg p-3">
+                        <h5 class="font-semibold text-gray-800 mb-2">💡 Idea</h5>
+                        <div class="text-2xl font-bold text-blue-600">${assessment.ideaScore}/7</div>
+                        <p class="text-xs text-gray-600 mt-1">Menepati tugasan, huraian dan contoh</p>
+                    </div>
+                    <div class="bg-white border rounded-lg p-3">
+                        <h5 class="font-semibold text-gray-800 mb-2">📝 Bahasa</h5>
+                        <div class="text-2xl font-bold text-green-600">${assessment.languageScore}/7</div>
+                        <p class="text-xs text-gray-600 mt-1">Tatabahasa, kosa kata, ejaan</p>
+                    </div>
+                    <div class="bg-white border rounded-lg p-3">
+                        <h5 class="font-semibold text-gray-800 mb-2">📋 Pengolahan</h5>
+                        <div class="text-2xl font-bold text-purple-600">${assessment.organizationScore}/6</div>
+                        <p class="text-xs text-gray-600 mt-1">Perenggan, kesinambungan</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h5 class="font-semibold text-gray-800 mb-2">📊 Analisis Terperinci</h5>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Bilangan perkataan: ${assessment.wordCount} (Sasaran: 50-80)</li>
+                        <li>• ${assessment.wordCount >= 50 && assessment.wordCount <= 80 ? '✅' : '❌'} Panjang karangan sesuai</li>
+                        <li>• ${assessment.ideaScore >= 5 ? '✅' : '❌'} Idea menepati tugasan</li>
+                        <li>• ${assessment.languageScore >= 5 ? '✅' : '❌'} Penggunaan bahasa yang baik</li>
+                        <li>• ${assessment.organizationScore >= 4 ? '✅' : '❌'} Struktur karangan tersusun</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h5 class="font-semibold text-yellow-800 mb-2">💡 Cadangan Penambahbaikan</h5>
+                    <ul class="text-sm text-yellow-700 space-y-1">
+                        ${assessment.wordCount < 50 ? '<li>• Tambah lebih banyak huraian dan contoh</li>' : ''}
+                        ${assessment.wordCount > 80 ? '<li>• Pendekkan karangan mengikut had perkataan</li>' : ''}
+                        ${assessment.ideaScore < 5 ? '<li>• Fokus lebih kepada topik yang diberikan</li>' : ''}
+                        ${assessment.languageScore < 5 ? '<li>• Semak ejaan dan tanda baca dengan teliti</li>' : ''}
+                        ${assessment.organizationScore < 4 ? '<li>• Susun idea dengan lebih teratur</li>' : ''}
+                        <li>• Gunakan lebih banyak penanda wacana (Selain itu, Seterusnya, Kesimpulannya)</li>
+                        <li>• Pastikan ada kesimpulan yang mengandungi nilai murni</li>
+                    </ul>
+                </div>
+            `;
+            
+            // Scroll to assessment
+            document.getElementById('aiAssessment').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Submit functionality
+        document.getElementById('submitBtn').addEventListener('click', async function() {
+            const studentName = document.getElementById('studentName').value;
+            const studentClass = document.getElementById('studentClass').value;
+            const studentSchool = document.getElementById('studentSchool').value;
+            const essay = essayText.value.trim();
+
+            if (!studentName || !studentClass || !studentSchool || !essay) {
+                showMessage('Sila lengkapkan nama, kelas, sekolah, dan karangan sebelum menghantar.', 'error');
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '⏳ Menghantar...';
+            submitBtn.disabled = true;
+
+            // Prepare data for Google Sheets
+            const essayData = {
+                name: studentName,
+                class: studentClass,
+                school: studentSchool,
+                essay: essay,
+                wordCount: essay.split(/\s+/).length,
+                timestamp: new Date().toLocaleString('ms-MY')
+            };
+
+            // Save to localStorage (backup)
+            localStorage.setItem('karangan_' + Date.now(), JSON.stringify(essayData));
+            
+            // Save to Google Sheets
+            const success = await saveToGoogleSheets(essayData);
+            
+            // Reset button
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            
+            if (success) {
+                showMessage('✅ Jawapan berjaya dihantar dan disimpan!', 'success');
+            } else {
+                showMessage('✅ Jawapan dihantar! (Disimpan secara tempatan)', 'success');
+            }
+
+            // Show sample answer after submission
+            document.getElementById('sampleAnswer').classList.remove('hidden');
+            
+            // Scroll to sample answer
+            document.getElementById('sampleAnswer').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Message display function
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg fade-in z-50 ${
+                type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+            }`;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 4000);
+        }
+
+        // Graph upload functionality
+        const graphUpload = document.getElementById('graphUpload');
+        const graphArea = document.getElementById('graphArea');
+
+        graphUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    graphArea.innerHTML = `
+                        <div class="relative">
+                            <img src="${e.target.result}" alt="Grafik untuk karangan" class="max-w-full h-auto rounded-lg shadow-md">
+                            <button onclick="removeGraph()" class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors">
+                                ✕
+                            </button>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function removeGraph() {
+            graphArea.innerHTML = `
+                <div class="text-gray-500">
+                    <div class="text-6xl mb-4">📈</div>
+                    <p class="text-lg">Sila muat naik grafik di sini</p>
+                    <p class="text-sm mt-2">Grafik akan dipaparkan untuk rujukan murid</p>
+                </div>
+            `;
+            graphUpload.value = '';
+        }
+
+        async function saveToGoogleSheets(data) {
+            try {
+                // Try POST method first (more reliable for Google Apps Script)
+                const response = await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                // Also try GET as backup
+                const params = new URLSearchParams({
+                    name: data.name,
+                    class: data.class,
+                    school: data.school,
+                    essay: data.essay,
+                    wordCount: data.wordCount,
+                    timestamp: data.timestamp
+                });
+                
+                const fullUrl = GOOGLE_SHEETS_URL + '?' + params.toString();
+                
+                await fetch(fullUrl, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+
+
+        // Clear functionality
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            // Create inline confirmation instead of browser confirm dialog
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            confirmDiv.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-sm mx-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Kosongkan Semua?</h3>
+                    <p class="text-gray-600 mb-6">Adakah anda pasti mahu mengosongkan semua kandungan? Tindakan ini tidak boleh dibatalkan.</p>
+                    <div class="flex gap-3 justify-end">
+                        <button id="cancelClear" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">Batal</button>
+                        <button id="confirmClear" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">Ya, Kosongkan</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDiv);
+            
+            document.getElementById('cancelClear').addEventListener('click', function() {
+                confirmDiv.remove();
+            });
+            
+            document.getElementById('confirmClear').addEventListener('click', function() {
+                document.getElementById('studentName').value = '';
+                document.getElementById('studentClass').value = '';
+                document.getElementById('studentSchool').value = '';
+                essayText.value = '';
+                updateWordCount();
+                confirmDiv.remove();
+                showMessage('Semua kandungan telah dikosongkan.', 'success');
+            });
+        });
+
+        // Print functionality
+        document.getElementById('printBtn').addEventListener('click', function() {
+            const studentName = document.getElementById('studentName').value || 'Nama tidak diisi';
+            const studentClass = document.getElementById('studentClass').value || 'Kelas tidak diisi';
+            const studentSchool = document.getElementById('studentSchool').value || 'Sekolah tidak diisi';
+            const essay = essayText.value || 'Tiada karangan ditulis';
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Karangan - ${studentName}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+                        .student-info { margin-bottom: 20px; }
+                        .essay-content { white-space: pre-wrap; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Karangan Bahagian D</h1>
+                        <p>Sistem Latihan Penulisan</p>
+                    </div>
+                    <div class="student-info">
+                        <p><strong>Nama:</strong> ${studentName}</p>
+                        <p><strong>Kelas:</strong> ${studentClass}</p>
+                        <p><strong>Sekolah:</strong> ${studentSchool}</p>
+                        <p><strong>Tarikh:</strong> ${new Date().toLocaleDateString('ms-MY')}</p>
+                        <p><strong>Bilangan Perkataan:</strong> ${essay.trim().split(/\s+/).length}</p>
+                    </div>
+                    <div class="essay-content">
+                        <h3>Karangan:</h3>
+                        <p>${essay}</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        });
+
+        // Initialize word count
+        updateWordCount();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9938e4b8266e0969',t:'MTc2MTMwMjgxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
