@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuiz Bahasa Melayu - Bahagian C: Penulisan Perenggan</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+        
+        html {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .question-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4facfe;
+        }
+        
+        .question-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px dashed #ddd;
+        }
+        
+        .image-placeholder {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .writing-area {
+            margin-top: 25px;
+        }
+        
+        .writing-area label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        .textarea-container {
+            position: relative;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+        
+        .word-counter {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: #666;
+            border: 1px solid #e1e8ed;
+        }
+        
+        .word-counter.warning {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            border-color: #e74c3c;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background: #e9ecef !important;
+            color: #6c757d !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        button:disabled:hover {
+            background: #e9ecef !important;
+            transform: none !important;
+        }
+        
+        .feedback-section {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            display: none;
+        }
+        
+        .feedback-section.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .feedback-positive {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .feedback-negative {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .sample-answer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .sample-answer h4 {
+            color: #856404;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .sample-text {
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .highlight {
+            background: #fff2cc;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .tips {
+            background: #e8f4fd;
+            border-left: 4px solid #4facfe;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .tips h4 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        .tips ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .tips li {
+            margin: 8px 0;
+            color: #34495e;
+        }
+        
+        .activity-section {
+            background: #f0f8ff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 5px solid #00bcd4;
+        }
+        
+        .activity-section h4 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .sentence-bank {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .sentence-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e1e8ed;
+            cursor: grab;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .sentence-item:hover {
+            border-color: #00bcd4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .sentence-item:active {
+            cursor: grabbing;
+        }
+        
+        .sentence-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+        
+        .drop-zone {
+            min-height: 200px;
+            border: 3px dashed #00bcd4;
+            border-radius: 15px;
+            padding: 20px;
+            background: rgba(0, 188, 212, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.drag-over {
+            background: rgba(0, 188, 212, 0.1);
+            border-color: #0097a7;
+        }
+        
+        .drop-instruction {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+        }
+        
+        .dropped-sentence {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #4caf50;
+            position: relative;
+        }
+        
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .writing-area h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .question-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: 2px solid #4facfe;
+            background: white;
+            color: #4facfe;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: #4facfe;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #4facfe;
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+        }
+        
+        .student-form-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4facfe;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+        
+        .student-info-display {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .student-info-display p {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 0.95em;
+        }
+        
+        .progress-tracker {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        .completion-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+        
+        .status-pending {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-partial {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-complete {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .question-nav {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📝 Kuiz Bahasa Melayu</h1>
+            <p>Bahagian C: Penulisan Perenggan - 3 Soalan</p>
+        </header>
+        
+        <main class="content">
+            <!-- Student Information Form -->
+            <div class="student-form-section" id="studentForm">
+                <div class="question-title">
+                    👤 Maklumat Pelajar
+                </div>
+                
+                <form id="studentInfoForm" onsubmit="submitStudentInfo(event)">
+                    <div class="form-group">
+                        <label for="studentName">Nama Penuh:</label>
+                        <input type="text" id="studentName" required placeholder="Masukkan nama penuh anda">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="studentClass">Kelas:</label>
+                        <input type="text" id="studentClass" required placeholder="Contoh: 4 Bestari">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="studentSchool">Nama Sekolah:</label>
+                        <input type="text" id="studentSchool" required placeholder="Masukkan nama sekolah anda">
+                    </div>
+                    
+                    <div class="buttons">
+                        <button type="submit" class="btn-primary">🚀 Mula Kuiz</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Quiz Navigation (Hidden initially) -->
+            <div class="quiz-content" id="quizContent" style="display: none;">
+                <div class="student-info-display">
+                    <p><strong>Pelajar:</strong> <span id="displayName"></span> | <strong>Kelas:</strong> <span id="displayClass"></span> | <strong>Sekolah:</strong> <span id="displaySchool"></span></p>
+                </div>
+                
+                <div class="progress-tracker">
+                    <h4>📊 Kemajuan Kuiz</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <div id="progressText">
+                        <span class="completion-status status-pending" id="status1">Soalan 1</span>
+                        <span class="completion-status status-pending" id="status2">Soalan 2</span>
+                        <span class="completion-status status-pending" id="status3">Soalan 3</span>
+                    </div>
+                </div>
+                
+                <div class="question-nav">
+                    <button class="nav-btn active" onclick="showQuestion(1)">Soalan 1</button>
+                    <button class="nav-btn" onclick="showQuestion(2)">Soalan 2</button>
+                    <button class="nav-btn" onclick="showQuestion(3)">Soalan 3</button>
+                </div>
+            
+            <div class="question-section" id="question1">
+                <div class="question-title">
+                    📊 Soalan 1: Kebersihan Sekolah
+                </div>
+                
+                <div class="image-container">
+                    <img src="https://i.imgur.com/Jq1tAcb.png" alt="Grafik tentang kebersihan sekolah" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" onerror="this.src=''; this.alt='Gambar gagal dimuatkan - Sila rujuk grafik kebersihan sekolah'; this.style.display='none'; this.parentElement.innerHTML='<div class=\'image-placeholder\'>📈 Grafik Kebersihan Sekolah<br><small>(Gambar tidak dapat dipaparkan)</small></div>';">
+                </div>
+                
+                <p><strong>Arahan:</strong> Grafik di atas menunjukkan tentang kebersihan sekolah. Tuliskan pendapat kamu tentang <strong>kebaikan aktiviti kebersihan di sekolah</strong>.</p>
+                
+                <div class="tips">
+                    <h4>💡 Petua Penulisan:</h4>
+                    <ul>
+                        <li>Jawapan hendaklah ditulis dalam <strong>satu perenggan</strong></li>
+                        <li>Panjang jawapan <strong>tidak lebih daripada 50 patah perkataan</strong></li>
+                        <li>Fokus kepada <strong>kebaikan aktiviti kebersihan</strong></li>
+                        <li>Gunakan ayat yang jelas dan padat</li>
+                    </ul>
+                </div>
+                
+                <div class="activity-section">
+                    <h4>🧩 Langkah 1: Susun Ayat</h4>
+                    <p>Susun ayat-ayat di bawah untuk membentuk perenggan yang baik:</p>
+                    
+                    <div class="sentence-bank">
+                        <div class="sentence-item" draggable="true" data-id="1">
+                            Pada pendapat saya, aktiviti kebersihan di sekolah amat penting kerana dapat menjadikan sekolah bersih dan ceria.
+                        </div>
+                        <div class="sentence-item" draggable="true" data-id="2">
+                            Selain itu, murid-murid akan berasa selesa ketika belajar.
+                        </div>
+                        <div class="sentence-item" draggable="true" data-id="3">
+                            Tambahan pula, mereka lebih bersemangat ke sekolah serta dapat meningkatkan kefahaman semasa mengikuti pembelajaran.
+                        </div>
+                    </div>
+                    
+                    <div class="drop-zone">
+                        <div class="drop-instruction">Seret ayat ke sini mengikut susunan yang betul</div>
+                    </div>
+                </div>
+                
+                <div class="writing-area">
+                    <h4>✍️ Langkah 2: Tulis Semula Perenggan</h4>
+                    <label for="answer">Tulis semula perenggan yang telah kamu susun:</label>
+                    <div class="textarea-container">
+                        <textarea 
+                            id="answer" 
+                            placeholder="Tulis semula perenggan yang telah kamu susun di atas..."
+                            oninput="countWords()"
+                        ></textarea>
+                        <div class="word-counter" id="wordCounter">0/50 patah perkataan</div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn-primary" onclick="checkAnswer()">✅ Semak Jawapan</button>
+                    <button class="btn-secondary" id="sampleBtn1" onclick="showSample()" disabled>👁️ Lihat Contoh Jawapan</button>
+                    <button class="btn-success" onclick="resetQuiz()">🔄 Mula Semula</button>
+                </div>
+            </div>
+            
+            <div class="question-section" id="question2" style="display: none;">
+                <div class="question-title">
+                    🏠 Soalan 2: Aktiviti Bersama Jiran
+                </div>
+                
+                <div class="image-container">
+                    <img src="https://i.imgur.com/3FEnN59.png" alt="Grafik tentang aktiviti bersama jiran" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" onerror="this.src=''; this.alt='Gambar gagal dimuatkan - Sila rujuk grafik aktiviti bersama jiran'; this.style.display='none'; this.parentElement.innerHTML='<div class=\'image-placeholder\'>📊 Grafik Aktiviti Bersama Jiran<br><small>(Gambar tidak dapat dipaparkan)</small></div>';">
+                </div>
+                
+                <p><strong>Arahan:</strong> Grafik di atas menunjukkan tentang aktiviti bersama jiran. Tuliskan pendapat kamu tentang <strong>cara menjaga hubungan baik dengan jiran</strong>.</p>
+                
+                <div class="tips">
+                    <h4>💡 Petua Penulisan:</h4>
+                    <ul>
+                        <li>Jawapan hendaklah ditulis dalam <strong>satu perenggan</strong></li>
+                        <li>Panjang jawapan <strong>tidak lebih daripada 50 patah perkataan</strong></li>
+                        <li>Fokus kepada <strong>cara menjaga hubungan baik dengan jiran</strong></li>
+                        <li>Gunakan ayat yang jelas dan padat</li>
+                    </ul>
+                </div>
+                
+                <div class="activity-section">
+                    <h4>🧩 Langkah 1: Susun Ayat</h4>
+                    <p>Susun ayat-ayat di bawah untuk membentuk perenggan yang baik:</p>
+                    
+                    <div class="sentence-bank" id="sentenceBank2">
+                        <div class="sentence-item" draggable="true" data-id="2-1">
+                            Pada pendapat saya, cara menjaga hubungan baik dengan jiran ialah dengan saling bertegur sapa dan bersikap mesra.
+                        </div>
+                        <div class="sentence-item" draggable="true" data-id="2-2">
+                            Selain itu, kita perlu saling membantu ketika jiran menghadapi kesusahan.
+                        </div>
+                        <div class="sentence-item" draggable="true" data-id="2-3">
+                            Tambahan pula, kita boleh mengadakan aktiviti bersama seperti gotong-royong untuk mengeratkan hubungan.
+                        </div>
+                    </div>
+                    
+                    <div class="drop-zone" id="dropZone2">
+                        <div class="drop-instruction">Seret ayat ke sini mengikut susunan yang betul</div>
+                    </div>
+                </div>
+                
+                <div class="writing-area">
+                    <h4>✍️ Langkah 2: Tulis Semula Perenggan</h4>
+                    <label for="answer2">Tulis semula perenggan yang telah kamu susun:</label>
+                    <div class="textarea-container">
+                        <textarea 
+                            id="answer2" 
+                            placeholder="Tulis semula perenggan yang telah kamu susun di atas..."
+                            oninput="countWords(2)"
+                        ></textarea>
+                        <div class="word-counter" id="wordCounter2">0/50 patah perkataan</div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn-primary" onclick="checkAnswer(2)">✅ Semak Jawapan</button>
+                    <button class="btn-secondary" id="sampleBtn2" onclick="showSample(2)" disabled>👁️ Lihat Contoh Jawapan</button>
+                    <button class="btn-success" onclick="resetQuiz(2)">🔄 Mula Semula</button>
+                </div>
+            </div>
+            
+            <div class="question-section" id="question3" style="display: none;">
+                <div class="question-title">
+                    🤝 Soalan 3: Perpaduan di Kalangan Rakan Sekolah
+                </div>
+                
+                <div class="image-container">
+                    <img src="https://i.imgur.com/vYfcPAG.png" alt="Grafik tentang perpaduan di kalangan rakan sekolah" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" onerror="this.src=''; this.alt='Gambar gagal dimuatkan - Sila rujuk grafik perpaduan di kalangan rakan sekolah'; this.style.display='none'; this.parentElement.innerHTML='<div class=\'image-placeholder\'>📊 Grafik Perpaduan di Kalangan Rakan Sekolah<br><small>(Gambar tidak dapat dipaparkan)</small></div>';">
+                </div>
+                
+                <p><strong>Arahan:</strong> Grafik di atas menunjukkan tentang perpaduan di kalangan rakan sekolah. Tuliskan pendapat kamu tentang <strong>usaha memupuk perpaduan</strong>.</p>
+                
+                <div class="tips">
+                    <h4>💡 Petua Penulisan:</h4>
+                    <ul>
+                        <li>Jawapan hendaklah ditulis dalam <strong>satu perenggan</strong></li>
+                        <li>Panjang jawapan <strong>tidak lebih daripada 50 patah perkataan</strong></li>
+                        <li>Fokus kepada <strong>usaha memupuk perpaduan</strong></li>
+                        <li>Gunakan ayat yang jelas dan padat</li>
+                    </ul>
+                </div>
+                
+                <div class="activity-section">
+                    <h4>🧩 Langkah 1: Susun Ayat</h4>
+                    <p>Susun ayat-ayat di bawah untuk membentuk perenggan yang baik:</p>
+                    
+                    <div class="sentence-bank" id="sentenceBank3">
+                        <div class="sentence-item" draggable="true" data-id="3-1">
+                            Pada pendapat saya, usaha memupuk perpaduan amat penting untuk mewujudkan keharmonian di sekolah.
+                        </div>
+                        <div class="sentence-item" draggable="true" data-id="3-2">
+                            Kita hendaklah menghormati perbezaan antara rakan dan mengukuhkan persahabatan dengan berkongsi makanan, bermain sukan bersama serta bertukar hadiah semasa perayaan.
+                        </div>
+                        <div class="sentence-item" draggable="true" data-id="3-3">
+                            Dengan cara ini, hubungan sesama rakan akan semakin erat dan harmoni.
+                        </div>
+                    </div>
+                    
+                    <div class="drop-zone" id="dropZone3">
+                        <div class="drop-instruction">Seret ayat ke sini mengikut susunan yang betul</div>
+                    </div>
+                </div>
+                
+                <div class="writing-area">
+                    <h4>✍️ Langkah 2: Tulis Semula Perenggan</h4>
+                    <label for="answer3">Tulis semula perenggan yang telah kamu susun:</label>
+                    <div class="textarea-container">
+                        <textarea 
+                            id="answer3" 
+                            placeholder="Tulis semula perenggan yang telah kamu susun di atas..."
+                            oninput="countWords(3)"
+                        ></textarea>
+                        <div class="word-counter" id="wordCounter3">0/50 patah perkataan</div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn-primary" onclick="checkAnswer(3)">✅ Semak Jawapan</button>
+                    <button class="btn-secondary" id="sampleBtn3" onclick="showSample(3)" disabled>👁️ Lihat Contoh Jawapan</button>
+                    <button class="btn-success" onclick="resetQuiz(3)">🔄 Mula Semula</button>
+                </div>
+            </div>
+            
+            <div class="feedback-section" id="feedbackSection">
+                <div id="feedbackContent"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let draggedElement = null;
+        let arrangedSentences = {
+            1: [],
+            2: [],
+            3: []
+        };
+        let currentQuestion = 1;
+        let studentInfo = {};
+        let questionProgress = {
+            1: { arranged: false, written: false, checked: false },
+            2: { arranged: false, written: false, checked: false },
+            3: { arranged: false, written: false, checked: false }
+        };
+        
+        // Function to shuffle array randomly
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+        
+        // Function to shuffle sentences in all questions
+        function shuffleSentences() {
+            // Shuffle Question 1 sentences
+            const q1Container = document.querySelector('#question1 .sentence-bank');
+            const q1Sentences = Array.from(q1Container.children);
+            const shuffledQ1 = shuffleArray(q1Sentences);
+            q1Container.innerHTML = '';
+            shuffledQ1.forEach(sentence => q1Container.appendChild(sentence));
+            
+            // Shuffle Question 2 sentences
+            const q2Container = document.querySelector('#sentenceBank2');
+            const q2Sentences = Array.from(q2Container.children);
+            const shuffledQ2 = shuffleArray(q2Sentences);
+            q2Container.innerHTML = '';
+            shuffledQ2.forEach(sentence => q2Container.appendChild(sentence));
+            
+            // Shuffle Question 3 sentences
+            const q3Container = document.querySelector('#sentenceBank3');
+            const q3Sentences = Array.from(q3Container.children);
+            const shuffledQ3 = shuffleArray(q3Sentences);
+            q3Container.innerHTML = '';
+            shuffledQ3.forEach(sentence => q3Container.appendChild(sentence));
+        }
+        
+        // Google Sheets integration
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby9stHVkdv9WQxS4qYXxzrfy5WvRmdXBpfDf5t57EDIeyfJ-lo2g9fUZIL1lKxW0ro/exec';
+        
+        function submitStudentInfo(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('studentName').value.trim();
+            const studentClass = document.getElementById('studentClass').value.trim();
+            const school = document.getElementById('studentSchool').value.trim();
+            
+            if (!name || !studentClass || !school) {
+                return;
+            }
+            
+            studentInfo = {
+                name: name,
+                class: studentClass,
+                school: school,
+                startTime: new Date().toISOString()
+            };
+            
+            // Display student info
+            document.getElementById('displayName').textContent = name;
+            document.getElementById('displayClass').textContent = studentClass;
+            document.getElementById('displaySchool').textContent = school;
+            
+            // Hide form and show quiz
+            document.getElementById('studentForm').style.display = 'none';
+            document.getElementById('quizContent').style.display = 'block';
+            
+            // Initialize first question
+            shuffleSentences();
+            initializeDragAndDrop(1);
+            countWords(1);
+        }
+        
+        function sendToGoogleSheets(data) {
+            // Send data to Google Sheets
+            console.log('Sending data to Google Sheets:', data);
+            
+            // Show loading indicator
+            const feedbackSection = document.getElementById('feedbackSection');
+            
+            // Add temporary loading message
+            const loadingDiv = document.createElement('div');
+            loadingDiv.innerHTML = '<p style="color: #666; font-style: italic;">📤 Menghantar data ke Google Sheets...</p>';
+            feedbackSection.appendChild(loadingDiv);
+            
+            // Create form data instead of JSON
+            const formData = new FormData();
+            formData.append('name', data.name);
+            formData.append('class', data.class);
+            formData.append('school', data.school);
+            formData.append('questionNumber', data.questionNumber);
+            formData.append('arrangedSentences', JSON.stringify(data.arrangedSentences));
+            formData.append('writtenAnswer', data.writtenAnswer);
+            formData.append('score', data.score);
+            formData.append('maxScore', data.maxScore);
+            formData.append('percentage', data.percentage);
+            formData.append('startTime', data.startTime);
+            formData.append('submissionTime', data.submissionTime);
+            
+            fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                console.log('Response received:', response);
+                loadingDiv.innerHTML = '<p style="color: #28a745; font-style: italic;">✅ Data berjaya dihantar ke Google Sheets!</p>';
+                setTimeout(() => {
+                    if (loadingDiv.parentNode) {
+                        loadingDiv.remove();
+                    }
+                }, 3000);
+            }).catch(error => {
+                console.log('Error sending to Google Sheets:', error);
+                loadingDiv.innerHTML = '<p style="color: #e74c3c; font-style: italic;">⚠️ Ralat menghantar data. Sila cuba lagi.</p>';
+                setTimeout(() => {
+                    if (loadingDiv.parentNode) {
+                        loadingDiv.remove();
+                    }
+                }, 3000);
+            });
+        }
+        
+        function updateProgress() {
+            let completedQuestions = 0;
+            
+            for (let i = 1; i <= 3; i++) {
+                const progress = questionProgress[i];
+                const statusElement = document.getElementById(`status${i}`);
+                
+                if (progress.checked) {
+                    statusElement.className = 'completion-status status-complete';
+                    statusElement.textContent = `Soalan ${i} ✓`;
+                    completedQuestions++;
+                } else if (progress.arranged && progress.written) {
+                    statusElement.className = 'completion-status status-partial';
+                    statusElement.textContent = `Soalan ${i} ⚠️`;
+                } else {
+                    statusElement.className = 'completion-status status-pending';
+                    statusElement.textContent = `Soalan ${i}`;
+                }
+            }
+            
+            const progressPercentage = (completedQuestions / 3) * 100;
+            document.getElementById('progressFill').style.width = progressPercentage + '%';
+        }
+        
+        function checkQuestionCompletion(questionNum) {
+            const hasArranged = arrangedSentences[questionNum].length === 3;
+            const hasWritten = document.getElementById(`answer${questionNum === 1 ? '' : questionNum}`).value.trim().length > 0;
+            
+            questionProgress[questionNum].arranged = hasArranged;
+            questionProgress[questionNum].written = hasWritten;
+            
+            // Enable sample button if both steps are completed
+            const sampleBtn = document.getElementById(`sampleBtn${questionNum}`);
+            if (hasArranged && hasWritten) {
+                sampleBtn.disabled = false;
+                sampleBtn.style.opacity = '1';
+            } else {
+                sampleBtn.disabled = true;
+                sampleBtn.style.opacity = '0.6';
+            }
+            
+            updateProgress();
+        }
+        
+        function showQuestion(questionNum) {
+            // Hide all questions
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`question${i}`).style.display = 'none';
+                document.querySelector(`.nav-btn:nth-child(${i})`).classList.remove('active');
+            }
+            
+            // Show selected question
+            document.getElementById(`question${questionNum}`).style.display = 'block';
+            document.querySelector(`.nav-btn:nth-child(${questionNum})`).classList.add('active');
+            
+            // Hide feedback
+            document.getElementById('feedbackSection').classList.remove('show');
+            
+            currentQuestion = questionNum;
+            
+            // Initialize drag and drop for the current question
+            initializeDragAndDrop(questionNum);
+        }
+        
+        function countWords(questionNum = 1) {
+            const textarea = document.getElementById(`answer${questionNum === 1 ? '' : questionNum}`);
+            const counter = document.getElementById(`wordCounter${questionNum === 1 ? '' : questionNum}`);
+            const text = textarea.value.trim();
+            const wordCount = text === '' ? 0 : text.split(/\s+/).length;
+            
+            counter.textContent = `${wordCount}/50 patah perkataan`;
+            
+            if (wordCount > 50) {
+                counter.classList.add('warning');
+            } else {
+                counter.classList.remove('warning');
+            }
+            
+            // Check completion status
+            checkQuestionCompletion(questionNum);
+        }
+        
+        // Initialize drag and drop functionality
+        function initializeDragAndDrop(questionNum) {
+            let sentenceItems, dropZone;
+            
+            if (questionNum === 1) {
+                sentenceItems = document.querySelectorAll(`#question1 .sentence-item`);
+                dropZone = document.querySelector(`#question1 .drop-zone`);
+            } else {
+                sentenceItems = document.querySelectorAll(`#sentenceBank${questionNum} .sentence-item`);
+                dropZone = document.querySelector(`#dropZone${questionNum}`);
+            }
+            
+            if (!dropZone) return;
+            
+            sentenceItems.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+            
+            dropZone.addEventListener('dragover', handleDragOver);
+            dropZone.addEventListener('drop', (e) => handleDrop(e, questionNum));
+            dropZone.addEventListener('dragenter', handleDragEnter);
+            dropZone.addEventListener('dragleave', handleDragLeave);
+        }
+        
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+        
+        function handleDragEnter(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        }
+        
+        function handleDragLeave(e) {
+            if (!this.contains(e.relatedTarget)) {
+                this.classList.remove('drag-over');
+            }
+        }
+        
+        function handleDrop(e, questionNum) {
+            e.preventDefault();
+            e.target.closest('.drop-zone').classList.remove('drag-over');
+            
+            if (draggedElement) {
+                const sentenceId = draggedElement.getAttribute('data-id');
+                const sentenceText = draggedElement.textContent.trim();
+                
+                // Check if sentence already exists in drop zone
+                const existingSentence = arrangedSentences[questionNum].find(s => s.id === sentenceId);
+                if (existingSentence) {
+                    return;
+                }
+                
+                // Add to arranged sentences
+                arrangedSentences[questionNum].push({
+                    id: sentenceId,
+                    text: sentenceText
+                });
+                
+                // Create dropped sentence element
+                const droppedSentence = document.createElement('div');
+                droppedSentence.className = 'dropped-sentence';
+                droppedSentence.setAttribute('data-id', sentenceId);
+                droppedSentence.innerHTML = `
+                    ${sentenceText}
+                    <button class="remove-btn" onclick="removeSentence('${sentenceId}', ${questionNum})">×</button>
+                `;
+                
+                // Remove instruction if it exists
+                const dropZone = e.target.closest('.drop-zone');
+                const instruction = dropZone.querySelector('.drop-instruction');
+                if (instruction) {
+                    instruction.remove();
+                }
+                
+                dropZone.appendChild(droppedSentence);
+                
+                // Hide the original sentence
+                draggedElement.style.display = 'none';
+                
+                // Check completion status
+                checkQuestionCompletion(questionNum);
+            }
+        }
+        
+        function removeSentence(sentenceId, questionNum) {
+            // Remove from arranged sentences
+            arrangedSentences[questionNum] = arrangedSentences[questionNum].filter(s => s.id !== sentenceId);
+            
+            // Remove from drop zone
+            const droppedSentence = document.querySelector(`.dropped-sentence[data-id="${sentenceId}"]`);
+            if (droppedSentence) {
+                droppedSentence.remove();
+            }
+            
+            // Show the original sentence again
+            const originalSentence = document.querySelector(`.sentence-item[data-id="${sentenceId}"]`);
+            if (originalSentence) {
+                originalSentence.style.display = 'block';
+            }
+            
+            // Add instruction back if no sentences
+            const dropZone = document.querySelector(`#dropZone${questionNum === 1 ? '' : questionNum}`);
+            if (arrangedSentences[questionNum].length === 0) {
+                dropZone.innerHTML = '<div class="drop-instruction">Seret ayat ke sini mengikut susunan yang betul</div>';
+            }
+            
+            // Check completion status
+            checkQuestionCompletion(questionNum);
+        }
+        
+        function checkAnswer(questionNum = 1) {
+            const answer = document.getElementById(`answer${questionNum === 1 ? '' : questionNum}`).value.trim();
+            const feedbackSection = document.getElementById('feedbackSection');
+            const feedbackContent = document.getElementById('feedbackContent');
+            
+            if (answer === '') {
+                feedbackContent.innerHTML = `
+                    <h3>⚠️ Jawapan Kosong</h3>
+                    <p>Sila lengkapkan kedua-dua langkah sebelum menyemak jawapan.</p>
+                `;
+                feedbackSection.className = 'feedback-section feedback-negative show';
+                return;
+            }
+            
+            let feedback = '';
+            let score = 0;
+            let maxScore = 4;
+            
+            // Define correct orders and expected sentences for each question
+            const questionData = {
+                1: {
+                    correctOrder: ['1', '2', '3'],
+                    expectedSentences: [
+                        "Pada pendapat saya, aktiviti kebersihan di sekolah amat penting kerana dapat menjadikan sekolah bersih dan ceria.",
+                        "Selain itu, murid-murid akan berasa selesa ketika belajar.",
+                        "Tambahan pula, mereka lebih bersemangat ke sekolah serta dapat meningkatkan kefahaman semasa mengikuti pembelajaran."
+                    ]
+                },
+                2: {
+                    correctOrder: ['2-1', '2-2', '2-3'],
+                    expectedSentences: [
+                        "Pada pendapat saya, cara menjaga hubungan baik dengan jiran ialah dengan saling bertegur sapa dan bersikap mesra.",
+                        "Selain itu, kita perlu saling membantu ketika jiran menghadapi kesusahan.",
+                        "Tambahan pula, kita boleh mengadakan aktiviti bersama seperti gotong-royong untuk mengeratkan hubungan."
+                    ]
+                },
+                3: {
+                    correctOrder: ['3-1', '3-2', '3-3'],
+                    expectedSentences: [
+                        "Pada pendapat saya, usaha memupuk perpaduan amat penting untuk mewujudkan keharmonian di sekolah.",
+                        "Kita hendaklah menghormati perbezaan antara rakan dan mengukuhkan persahabatan dengan berkongsi makanan, bermain sukan bersama serta bertukar hadiah semasa perayaan.",
+                        "Dengan cara ini, hubungan sesama rakan akan semakin erat dan harmoni."
+                    ]
+                }
+            };
+            
+            const currentData = questionData[questionNum];
+            const userOrder = arrangedSentences[questionNum].map(s => s.id);
+            const isCorrectOrder = JSON.stringify(currentData.correctOrder) === JSON.stringify(userOrder);
+            
+            // Check sentence arrangement (40% of score)
+            if (arrangedSentences[questionNum].length === 0) {
+                feedback += `<p>❌ <strong>Susunan Ayat:</strong> Belum disusun</p>`;
+            } else if (arrangedSentences[questionNum].length < 3) {
+                feedback += `<p>⚠️ <strong>Susunan Ayat:</strong> Tidak lengkap (${arrangedSentences[questionNum].length}/3 ayat)</p>`;
+            } else if (isCorrectOrder) {
+                feedback += `<p>✅ <strong>Susunan Ayat:</strong> Betul dan lengkap</p>`;
+                score += 2;
+            } else {
+                feedback += `<p>⚠️ <strong>Susunan Ayat:</strong> Susunan tidak tepat</p>`;
+                score += 1;
+            }
+            
+            // Check written paragraph (60% of score)
+            const wordCount = answer.split(/\s+/).length;
+            
+            // Word count check
+            if (wordCount > 50) {
+                feedback += `<p>❌ <strong>Panjang Perenggan:</strong> ${wordCount} patah perkataan (melebihi had 50)</p>`;
+            } else if (wordCount < 30) {
+                feedback += `<p>⚠️ <strong>Panjang Perenggan:</strong> ${wordCount} patah perkataan (terlalu pendek)</p>`;
+            } else {
+                feedback += `<p>✅ <strong>Panjang Perenggan:</strong> ${wordCount} patah perkataan (sesuai)</p>`;
+                score += 1;
+            }
+            
+            // Content similarity check
+            let matchingContent = 0;
+            currentData.expectedSentences.forEach(sentence => {
+                const keyWords = sentence.toLowerCase().match(/\b\w+\b/g);
+                const answerWords = answer.toLowerCase().match(/\b\w+\b/g) || [];
+                const matches = keyWords.filter(word => answerWords.includes(word));
+                if (matches.length >= keyWords.length * 0.6) {
+                    matchingContent++;
+                }
+            });
+            
+            if (matchingContent >= 3) {
+                feedback += `<p>✅ <strong>Kandungan Perenggan:</strong> Menepati susunan ayat yang disusun</p>`;
+                score += 1;
+            } else if (matchingContent >= 2) {
+                feedback += `<p>⚠️ <strong>Kandungan Perenggan:</strong> Sebahagian menepati susunan ayat</p>`;
+            } else {
+                feedback += `<p>❌ <strong>Kandungan Perenggan:</strong> Tidak menepati susunan ayat yang disusun</p>`;
+            }
+            
+            // Overall assessment
+            const percentage = Math.round((score / maxScore) * 100);
+            
+            if (percentage >= 75) {
+                feedback = `<h3>🎉 Cemerlang! (${percentage}%)</h3>` + feedback + 
+                          `<p><strong>Komen:</strong> Tahniah! Kamu berjaya menyusun ayat dengan betul dan menulis semula perenggan dengan tepat.</p>`;
+                feedbackSection.className = 'feedback-section feedback-positive show';
+            } else if (percentage >= 50) {
+                feedback = `<h3>👍 Baik! (${percentage}%)</h3>` + feedback + 
+                          `<p><strong>Komen:</strong> Prestasi yang baik! Cuba perbaiki bahagian yang kurang tepat.</p>`;
+                feedbackSection.className = 'feedback-section feedback-positive show';
+            } else {
+                feedback = `<h3>📝 Perlu Diperbaiki (${percentage}%)</h3>` + feedback + 
+                          `<p><strong>Cadangan:</strong> Pastikan kamu menyusun ayat dengan betul terlebih dahulu, kemudian tulis semula perenggan mengikut susunan tersebut.</p>`;
+                feedbackSection.className = 'feedback-section feedback-negative show';
+            }
+            
+            feedbackContent.innerHTML = feedback;
+            
+            // Mark question as checked and update progress
+            questionProgress[questionNum].checked = true;
+            updateProgress();
+            
+            // Send data to Google Sheets
+            const submissionData = {
+                ...studentInfo,
+                questionNumber: questionNum,
+                arrangedSentences: arrangedSentences[questionNum],
+                writtenAnswer: answer,
+                score: score,
+                maxScore: maxScore,
+                percentage: percentage,
+                submissionTime: new Date().toISOString()
+            };
+            
+            sendToGoogleSheets(submissionData);
+        }
+        
+        function showSample(questionNum = 1) {
+            // Check if both steps are completed
+            const hasArranged = arrangedSentences[questionNum].length === 3;
+            const hasWritten = document.getElementById(`answer${questionNum === 1 ? '' : questionNum}`).value.trim().length > 0;
+            
+            if (!hasArranged || !hasWritten) {
+                const feedbackSection = document.getElementById('feedbackSection');
+                const feedbackContent = document.getElementById('feedbackContent');
+                
+                feedbackContent.innerHTML = `
+                    <h3>⚠️ Langkah Belum Lengkap</h3>
+                    <p>Sila lengkapkan kedua-dua langkah terlebih dahulu:</p>
+                    <ul>
+                        <li>${hasArranged ? '✅' : '❌'} Langkah 1: Susun ayat</li>
+                        <li>${hasWritten ? '✅' : '❌'} Langkah 2: Tulis semula perenggan</li>
+                    </ul>
+                    <p>Contoh jawapan hanya boleh dilihat selepas melengkapkan kedua-dua langkah.</p>
+                `;
+                feedbackSection.className = 'feedback-section feedback-negative show';
+                return;
+            }
+            
+            const feedbackSection = document.getElementById('feedbackSection');
+            const feedbackContent = document.getElementById('feedbackContent');
+            
+            const sampleData = {
+                1: {
+                    text: "Pada pendapat saya, aktiviti kebersihan di sekolah amat <span class='highlight'>penting</span> kerana dapat menjadikan sekolah <span class='highlight'>bersih dan ceria</span>. Selain itu, murid-murid akan berasa <span class='highlight'>selesa</span> ketika belajar. Tambahan pula, mereka lebih <span class='highlight'>bersemangat</span> ke sekolah serta dapat <span class='highlight'>meningkatkan kefahaman</span> semasa mengikuti pembelajaran.",
+                    wordCount: 42,
+                    benefits: "Sekolah bersih dan ceria, murid selesa belajar, lebih bersemangat, meningkatkan kefahaman"
+                },
+                2: {
+                    text: "Pada pendapat saya, cara menjaga hubungan baik dengan jiran ialah dengan saling <span class='highlight'>bertegur sapa</span> dan <span class='highlight'>bersikap mesra</span>. Selain itu, kita perlu saling <span class='highlight'>membantu</span> ketika jiran menghadapi kesusahan. Tambahan pula, kita boleh mengadakan aktiviti bersama seperti <span class='highlight'>gotong-royong</span> untuk mengeratkan hubungan.",
+                    wordCount: 41,
+                    benefits: "Bertegur sapa dan mesra, saling membantu, aktiviti bersama gotong-royong"
+                },
+                3: {
+                    text: "Pada pendapat saya, usaha memupuk perpaduan amat <span class='highlight'>penting</span> untuk mewujudkan <span class='highlight'>keharmonian</span> di sekolah. Kita hendaklah <span class='highlight'>menghormati perbezaan</span> antara rakan dan mengukuhkan persahabatan dengan <span class='highlight'>berkongsi makanan</span>, <span class='highlight'>bermain sukan bersama</span> serta <span class='highlight'>bertukar hadiah</span> semasa perayaan. Dengan cara ini, hubungan sesama rakan akan semakin <span class='highlight'>erat dan harmoni</span>.",
+                    wordCount: 48,
+                    benefits: "Mewujudkan keharmonian, menghormati perbezaan, berkongsi makanan, bermain sukan bersama, bertukar hadiah"
+                }
+            };
+            
+            const sample = sampleData[questionNum];
+            
+            feedbackContent.innerHTML = `
+                <div class="sample-answer">
+                    <h4>📖 Contoh Jawapan Model - Soalan ${questionNum}</h4>
+                    <div class="sample-text">
+                        ${sample.text}
+                    </div>
+                    <p><strong>Jumlah patah perkataan:</strong> ${sample.wordCount} patah perkataan</p>
+                    <p><strong>Poin utama:</strong> ${sample.benefits}</p>
+                </div>
+            `;
+            
+            feedbackSection.className = 'feedback-section feedback-positive show';
+        }
+        
+        function resetQuiz(questionNum = 1) {
+            // Reset textarea
+            document.getElementById(`answer${questionNum === 1 ? '' : questionNum}`).value = '';
+            document.getElementById('feedbackSection').classList.remove('show');
+            
+            // Reset arranged sentences
+            arrangedSentences[questionNum] = [];
+            
+            // Reset drop zone
+            let dropZone;
+            if (questionNum === 1) {
+                dropZone = document.querySelector(`#question1 .drop-zone`);
+            } else {
+                dropZone = document.querySelector(`#dropZone${questionNum}`);
+            }
+            if (dropZone) {
+                dropZone.innerHTML = '<div class="drop-instruction">Seret ayat ke sini mengikut susunan yang betul</div>';
+            }
+            
+            // Show all sentence items for this question
+            let sentenceItems;
+            if (questionNum === 1) {
+                sentenceItems = document.querySelectorAll(`#question1 .sentence-item`);
+            } else {
+                sentenceItems = document.querySelectorAll(`#sentenceBank${questionNum} .sentence-item`);
+            }
+            sentenceItems.forEach(item => {
+                item.style.display = 'block';
+            });
+            
+            countWords(questionNum);
+            
+            // Reset progress for this question
+            questionProgress[questionNum] = { arranged: false, written: false, checked: false };
+            updateProgress();
+            
+            // Shuffle sentences again for fresh start
+            shuffleSentences();
+        }
+        
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start with student form visible
+            updateProgress();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993665a735c2f594',t:'MTc2MTI3NjY0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
