@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuiz Bahasa Melayu Tahun 4 - Set A</title>
+    <title>Kuiz Interaktif BM Tahun 4</title>
     <style>
         body {
             box-sizing: border-box;
@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
@@ -71,6 +71,7 @@
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s;
+            box-sizing: border-box;
         }
 
         input[type="text"]:focus {
@@ -102,14 +103,6 @@
             background: #1976D2;
         }
 
-        .btn-danger {
-            background: #f44336;
-        }
-
-        .btn-danger:hover {
-            background: #d32f2f;
-        }
-
         .section {
             margin-bottom: 30px;
             padding: 20px;
@@ -125,15 +118,7 @@
             margin-bottom: 15px;
         }
 
-        .material {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #2196F3;
-        }
-
-        .question {
+        .question-card {
             background: white;
             padding: 20px;
             border-radius: 8px;
@@ -147,11 +132,12 @@
             margin-bottom: 10px;
         }
 
-        .options {
+        /* MCQ Styles */
+        .mcq-options {
             margin-top: 15px;
         }
 
-        .option {
+        .mcq-option {
             display: flex;
             align-items: center;
             margin-bottom: 10px;
@@ -161,14 +147,137 @@
             transition: background 0.3s;
         }
 
-        .option:hover {
+        .mcq-option:hover {
             background: #f0f0f0;
         }
 
-        .option input[type="radio"] {
+        .mcq-option input[type="radio"] {
             margin-right: 10px;
         }
 
+        /* Text Input Styles */
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* Order Question Styles */
+        .order-container {
+            margin-top: 15px;
+        }
+
+        .tokens-available {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+
+        .tokens-selected {
+            background: #f3e5f5;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 60px;
+            border: 2px dashed #9c27b0;
+        }
+
+        .token {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .token:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+
+        .token.selected {
+            background: #9c27b0;
+        }
+
+        .order-labels {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* Judge Question Styles */
+        .judge-container {
+            margin-top: 15px;
+        }
+
+        .judge-labels {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .judge-label {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.3s;
+        }
+
+        .judge-label.false {
+            background: #f44336;
+        }
+
+        .judge-label:hover {
+            transform: scale(1.05);
+        }
+
+        .judge-label.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .judge-statement {
+            background: #f5f5f5;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 2px dashed #ddd;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+
+        .judge-statement.drag-over {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+        }
+
+        .judge-statement .assigned-label {
+            background: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .judge-statement .assigned-label.false {
+            background: #f44336;
+        }
+
+        /* Results Styles */
         .results {
             text-align: center;
         }
@@ -188,11 +297,11 @@
             text-align: left;
         }
 
-        .correct {
+        .result-item.correct {
             border-left: 5px solid #4CAF50;
         }
 
-        .incorrect {
+        .result-item.incorrect {
             border-left: 5px solid #f44336;
         }
 
@@ -217,19 +326,16 @@
             .timer {
                 font-size: 1rem;
             }
-        }
 
-        @media print {
-            body {
-                background: white;
+            .judge-labels {
+                flex-direction: column;
+                align-items: center;
             }
-            
-            .container {
-                box-shadow: none;
-            }
-            
-            .btn {
-                display: none;
+
+            .token {
+                margin: 3px;
+                padding: 6px 12px;
+                font-size: 14px;
             }
         }
     </style>
@@ -237,14 +343,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎓 Kuiz Bahasa Melayu Tahun 4 - Set A</h1>
+            <h1>🎓 Kuiz Interaktif BM Tahun 4</h1>
             <div class="timer hidden" id="timer">⏱️ Masa: 00:00</div>
         </div>
 
-        <!-- Skrin Mula -->
+        <!-- Start Screen -->
         <div id="startScreen" class="content">
             <h2>Selamat Datang!</h2>
-            <p>Kuiz ini mengandungi 10 soalan dan akan mengambil masa kira-kira 15-20 minit.</p>
+            <p>Kuiz interaktif ini mengandungi pelbagai jenis soalan untuk menguji kemahiran Bahasa Melayu anda.</p>
             
             <div class="form-group">
                 <label for="studentName">Nama Murid:</label>
@@ -257,284 +363,23 @@
             </div>
             
             <div class="form-group">
-                <label for="studentSchool">Sekolah:</label>
+                <label for="studentSchool">Nama Sekolah:</label>
                 <input type="text" id="studentSchool" placeholder="Contoh: SK Taman Desa" required>
             </div>
             
-            <button class="btn" onclick="startQuiz()">🚀 Mula Kuiz</button>
+            <button class="btn" id="startQuizBtn">🚀 Mula Kuiz</button>
         </div>
 
-        <!-- Skrin Kuiz -->
+        <!-- Quiz Screen -->
         <div id="quizScreen" class="content hidden">
-            <!-- Bahagian A -->
-            <div class="section">
-                <div class="section-title">Bahagian A</div>
-                <div class="material">
-                    <p><strong>Pilih jawapan yang paling sesuai.</strong></p>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 1:</div>
-                    <p>Haziq memimpin warga emas itu ketika melintas ________.</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q1" value="A" id="q1a">
-                            <label for="q1a">A) titi</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q1" value="B" id="q1b">
-                            <label for="q1b">B) jalan</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q1" value="C" id="q1c">
-                            <label for="q1c">C) jeti</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q1" value="D" id="q1d">
-                            <label for="q1d">D) jejantas</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 2:</div>
-                    <p>Tong sampah di dapur itu berbau ________ kerana minyak lama.</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q2" value="A" id="q2a">
-                            <label for="q2a">A) hanyir</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q2" value="B" id="q2b">
-                            <label for="q2b">B) busuk</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q2" value="C" id="q2c">
-                            <label for="q2c">C) hamis</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q2" value="D" id="q2d">
-                            <label for="q2d">D) tengik</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 3:</div>
-                    <p>Pilih ayat yang betul.</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q3" value="A" id="q3a">
-                            <label for="q3a">A) Bilakah kamu menyiapkan kerja sekolah ini?</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q3" value="B" id="q3b">
-                            <label for="q3b">B) Siapakah umur adik kamu?</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q3" value="C" id="q3c">
-                            <label for="q3c">C) Di manakah cara membuat roti canai?</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q3" value="D" id="q3d">
-                            <label for="q3d">D) Apakah kamu pergi ke pasar semalam?</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bahagian B -->
-            <div class="section">
-                <div class="section-title">Bahagian B</div>
-                <div class="material">
-                    <p><strong>Baca petikan, kemudian jawab soalan 4–6.</strong></p>
-                    <p>Balqis menyambut hari lahirnya yang kesembilan di kelas Empat Cemerlang. Ibunya menyediakan aneka makanan dan minuman. Cikgu Zainab dan Rina menghias kelas dengan reben berwarna-warni. Mereka menyanyikan lagu "Selamat Hari Lahir" ketika Balqis meniup lilin. Haziq menghadiahkan botol minuman, manakala Mira memberikan buku cerita. Balqis turut menerima hadiah lain seperti gelang, stokin, tabung, jam dan kek kukus.</p>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 4:</div>
-                    <p>Siapakah yang menyambut hari lahir kesembilan?</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q4" value="A" id="q4a">
-                            <label for="q4a">A) Haziq</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q4" value="B" id="q4b">
-                            <label for="q4b">B) Mira</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q4" value="C" id="q4c">
-                            <label for="q4c">C) Balqis</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q4" value="D" id="q4d">
-                            <label for="q4d">D) Rina</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 5:</div>
-                    <p>Pilih pernyataan yang benar.</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q5" value="A" id="q5a">
-                            <label for="q5a">A) Rina menghadiahkan botol minuman.</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q5" value="B" id="q5b">
-                            <label for="q5b">B) Lagu "Selamat Hari Lahir" dinyanyikan ketika Balqis meniup lilin.</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q5" value="C" id="q5c">
-                            <label for="q5c">C) Cikgu Zainab dan Haziq menghias kelas.</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q5" value="D" id="q5d">
-                            <label for="q5d">D) Ibu Balqis menghadiahkan buku cerita.</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 6:</div>
-                    <p>Berikut ialah hadiah yang diterima Balqis berdasarkan petikan, kecuali</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q6" value="A" id="q6a">
-                            <label for="q6a">A) gelang dan tabung</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q6" value="B" id="q6b">
-                            <label for="q6b">B) buku cerita dan jam</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q6" value="C" id="q6c">
-                            <label for="q6c">C) stokin dan botol minuman</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q6" value="D" id="q6d">
-                            <label for="q6d">D) reben dan belon</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bahagian C -->
-            <div class="section">
-                <div class="section-title">Bahagian C</div>
-                <div class="material">
-                    <p><strong>Baca Bahan 1 dan Bahan 2, kemudian jawab soalan 7–10.</strong></p>
-                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #ffc107;">
-                        <h4 style="color: #856404; margin-top: 0;">Bahan 1:</h4>
-                        <p>Aminah dan rakan-rakannya berlatih bercerita setiap petang selama dua bulan. Pada hari pertandingan, mereka bercerita dengan jelas dan yakin berbanding pasukan lain. Keputusan: tempat kedua. Hadiah: RM400 dan sijil penyertaan. Mereka berasa bangga kerana mengharumkan nama sekolah.</p>
-                    </div>
-                    <div style="background: #d1ecf1; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #17a2b8;">
-                        <h4 style="color: #0c5460; margin-top: 0;">Bahan 2:</h4>
-                        <p>Pertandingan Bercerita Sekolah Rendah – Bulan Bahasa 2025. Tarikh: 15 Mei 2025. Masa: 8.00 pagi. Tempat: Dewan Seri Bestari, SK Maju. Juara: RM700 & Sijil Penghargaan. Syarat: Terbuka kepada murid Tahap 2.</p>
-                    </div>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 7:</div>
-                    <p>Aminah dan rakan-rakan bersedia menyertai pertandingan kerana…</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q7" value="A" id="q7a">
-                            <label for="q7a">A) berasa sangat bangga.</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q7" value="B" id="q7b">
-                            <label for="q7b">B) telah berlatih selama dua bulan.</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q7" value="C" id="q7c">
-                            <label for="q7c">C) telah mengharumkan nama sekolah.</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q7" value="D" id="q7d">
-                            <label for="q7d">D) belum jelas pertuturannya.</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 8:</div>
-                    <p>Penjodoh bilangan yang sesuai bagi perkataan 'sijil' ialah…</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q8" value="A" id="q8a">
-                            <label for="q8a">A) keping</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q8" value="B" id="q8b">
-                            <label for="q8b">B) lembar</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q8" value="C" id="q8c">
-                            <label for="q8c">C) bidang</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q8" value="D" id="q8d">
-                            <label for="q8d">D) helai</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 9:</div>
-                    <p>Perkataan 'pertandingan' boleh digantikan dengan…</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q9" value="A" id="q9a">
-                            <label for="q9a">A) penghargaan</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q9" value="B" id="q9b">
-                            <label for="q9b">B) peraduan</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q9" value="C" id="q9c">
-                            <label for="q9c">C) penyertaan</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q9" value="D" id="q9d">
-                            <label for="q9d">D) perlawanan</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="question">
-                    <div class="question-number">Soalan 10:</div>
-                    <p>Pilih pernyataan yang benar tentang Bahan 1 dan Bahan 2.</p>
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q10" value="A" id="q10a">
-                            <label for="q10a">A) Kumpulan Aminah memenangi hadiah RM700.</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q10" value="B" id="q10b">
-                            <label for="q10b">B) Pertandingan dalam Bahan 2 terbuka kepada murid Tahap 2.</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q10" value="C" id="q10c">
-                            <label for="q10c">C) Kumpulan Aminah menyertai deklamasi sajak.</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" name="q10" value="D" id="q10d">
-                            <label for="q10d">D) Juara pertandingan dalam Bahan 2 menerima RM400.</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <div id="questionsContainer"></div>
+            
             <div style="text-align: center; margin-top: 30px;">
-                <button class="btn" onclick="submitQuiz()">📝 Hantar Jawapan</button>
+                <button class="btn" id="submitQuizBtn">📝 Hantar Jawapan</button>
             </div>
         </div>
 
-        <!-- Skrin Keputusan -->
+        <!-- Results Screen -->
         <div id="resultScreen" class="content hidden">
             <div class="results">
                 <h2>🎉 Keputusan Kuiz</h2>
@@ -543,50 +388,156 @@
                 <div id="detailedResults"></div>
                 
                 <div style="margin-top: 30px;">
-                    <button class="btn" onclick="tryAgain()">🔄 Cuba Lagi</button>
-                    <button class="btn btn-secondary" onclick="printResults()">🖨️ Cetak Keputusan</button>
+                    <button class="btn" id="tryAgainBtn">🔄 Cuba Lagi</button>
+                    <button class="btn btn-secondary" id="printResultsBtn">🖨️ Cetak Keputusan</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Pemalar untuk Google Apps Script Web App URL
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxJ_MLQ0t6dAYamUmcUgAZKZCW9IlQu6boeYmrtnv6xHnngDyVx7pY2_waWrbRufXE/exec";
+        // Google Apps Script Web App URL
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxwGm_LGFvBasYbl-qRUsvmUMXmaHR7hds726BgKtx7kgUQAWncmO6XrF4snT15KJ8/exec";
         
-        // Jawapan yang betul
-        const correctAnswers = {
-            q1: 'B', q2: 'D', q3: 'A', q4: 'C', q5: 'B',
-            q6: 'D', q7: 'B', q8: 'A', q9: 'B', q10: 'B'
-        };
-
-        // Pembolehubah global
+        // Quiz data will be loaded here
+        let QUIZ_DATA = {};
+        
+        // Global variables
         let startTime;
         let timerInterval;
         let quizData = {};
+        let userAnswers = {};
+
+        // Initialize quiz data
+        function initializeQuizData() {
+            const rawData = {"set_id":"BMThn4-SetA+Ramalan","sections":[
+                {"t":"A","i":"Pilih jawapan paling sesuai.","q":[
+                {"y":"mcq","s":"Haziq memimpin warga emas ketika melintas ________.","o":["titi","jalan","jeti","jejantas"],"a":1},
+                {"y":"mcq","s":"Tong sampah di dapur itu berbau ________ kerana minyak lama.","o":["hanyir","busuk","hamis","tengik"],"a":3},
+                {"y":"mcq","s":"Pilih ayat yang betul.","o":["Bilakah kamu menyiapkan kerja sekolah ini?","Siapakah umur adik kamu?","Di manakah cara membuat roti canai?","Apakah kamu pergi ke pasar semalam?"],"a":0}]},
+                {"t":"B(Pemahaman)","i":"Baca petikan dan jawab.","c":"Balqis menyambut hari lahir kesembilan di kelas 4 Cemerlang. Ibunya menyediakan makanan, Cikgu Zainab dan Rina menghias kelas. Mereka menyanyi lagu Selamat Hari Lahir. Haziq memberi botol, Mira memberi buku. Balqis turut dapat gelang, stokin, tabung, jam dan kek.","q":[
+                {"y":"mcq","s":"Siapakah menyambut hari lahir?","o":["Haziq","Mira","Balqis","Rina"],"a":2},
+                {"y":"mcq","s":"Pilih pernyataan benar.","o":["Rina beri botol.","Lagu Selamat Hari Lahir dinyanyikan bersama.","Cikgu Zainab dan Haziq hias kelas.","Ibu Balqis beri buku."],"a":1},
+                {"y":"mcq","s":"Hadiah diterima Balqis kecuali —","o":["gelang dan tabung","buku dan jam","stokin dan botol","reben dan belon"],"a":3}]},
+                {"t":"C(Bahan1&2)","i":"Baca Bahan 1 dan 2, kemudian jawab.","c1":"Aminah dan rakan berlatih bercerita dua bulan. Pada hari pertandingan mereka bercerita dengan yakin. Dapat tempat kedua (RM400 +sijil).","c2":"Pertandingan Bercerita SR Bulan Bahasa 2025 15 Mei 8 pagi Dewan SK Maju • Juara RM700 • Terbuka Tahap 2.","q":[
+                {"y":"mcq","s":"Aminah dan rakan bersedia kerana…","o":["bangga","berlatih dua bulan","mengharumkan sekolah","belum jelas"],"a":1},
+                {"y":"mcq","s":"Penjodoh sesuai bagi 'sijil' ialah…","o":["keping","lembar","bidang","helai"],"a":0},
+                {"y":"mcq","s":"Sinonim 'pertandingan' ialah…","o":["penghargaan","peraduan","penyertaan","perlawanan"],"a":1},
+                {"y":"mcq","s":"Pernyataan benar tentang Bahan 1 & 2.","o":["Aminah dan rakan menang RM700 dalam pertandingan.","Pertandingan bercerita terbuka untuk murid Tahap 2.","Pertandingan yang diadakan adalah deklamasi sajak.","Juara pertandingan akan menerima hadiah RM400."],"a":1}]},
+                {"t":"B","i":"Baca petikan dan jawab (a–d).","c":"Ibu Danish ada kereta Perodua Bezza dibeli di Kuantan Pahang berwarna biru. Kereta itu diguna ke tempat kerja dan hantar nenek ke klinik. Setiap Sabtu ibu Danish mencuci serta menggilap kereta itu.","q":[
+                {"y":"text","s":"(a) Ibu Danish ada kereta berjenama ____.","acc":["perodua bezza","bezza"]},
+                {"y":"order","s":"(b) Susun perkataan jadi jawapan — Apakah kegunaan kereta itu?","tok":["kereta","digunakan","untuk","pergi","ke","tempat","kerja","dan","menghantar","nenek","ke","klinik"],"key":"kereta digunakan untuk pergi ke tempat kerja dan menghantar nenek ke klinik"},
+                {"y":"mcq","s":"(c) Pilih kata kerja dalam ayat ini: \"Ibu Danish mencuci dan menggilap kereta.\"","o":["mencuci","ibu","kereta","biru"],"a":0},
+                {"y":"judge","s":"(d) Seret label BETUL atau SALAH ke setiap ayat di bawah berdasarkan sama ada ayat tersebut sama maksud dengan ayat yang diberikan.<br><strong>Ayat yang diberi:</strong> Urusan jual beli di setiap gerai jualan dilakukan dengan menggunakan kupon.","snt":[["Setiap gerai jualan menjual kupon yang digunakan dalam urusan jual beli.",0],["Kupon digunakan ketika urusan jual beli di setiap gerai jualan.",1]]}]}
+            ]};
+            
+            // Transform raw data to internal format
+            QUIZ_DATA = {
+                set_id: rawData.set_id,
+                sections: rawData.sections.map((section, sectionIndex) => ({
+                    title: `Bahagian ${section.t}`,
+                    instruction: section.i,
+                    content: section.c,
+                    content1: section.c1,
+                    content2: section.c2,
+                    items: section.q.map((question, questionIndex) => {
+                        const questionId = `s${sectionIndex}_q${questionIndex}`;
+                        const baseItem = {
+                            id: questionId,
+                            type: question.y,
+                            q: question.s,
+                            w: 1
+                        };
+                        
+                        switch(question.y) {
+                            case 'mcq':
+                                return {
+                                    ...baseItem,
+                                    options: question.o.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`),
+                                    key: String.fromCharCode(65 + question.a)
+                                };
+                            case 'text':
+                                return {
+                                    ...baseItem,
+                                    acc: question.acc
+                                };
+                            case 'order':
+                                return {
+                                    ...baseItem,
+                                    tokens: question.tok,
+                                    key: question.key
+                                };
+                            case 'judge':
+                                return {
+                                    ...baseItem,
+                                    s: question.snt
+                                };
+                            default:
+                                return baseItem;
+                        }
+                    })
+                }))
+            };
+        }
 
         function startQuiz() {
+            console.log('startQuiz function called');
+            
             const name = document.getElementById('studentName').value.trim();
             const className = document.getElementById('studentClass').value.trim();
             const school = document.getElementById('studentSchool').value.trim();
             
+            console.log('Form values:', { name, className, school });
+            
             if (!name || !className || !school) {
-                alert('Sila masukkan nama, kelas dan sekolah anda.');
+                showInlineMessage('Sila masukkan nama, kelas dan nama sekolah anda.', 'error');
+                console.log('Validation failed - missing fields');
                 return;
             }
+            
+            console.log('Validation passed, starting quiz...');
             
             quizData.nama = name;
             quizData.kelas = className;
             quizData.sekolah = school;
             
-            // Tukar ke skrin kuiz
-            document.getElementById('startScreen').classList.add('hidden');
-            document.getElementById('quizScreen').classList.remove('hidden');
-            document.getElementById('timer').classList.remove('hidden');
-            
-            // Mula pemasa
-            startTime = new Date();
-            startTimer();
+            try {
+                console.log('Step 1: Initializing quiz data...');
+                initializeQuizData();
+                console.log('Quiz data initialized successfully:', QUIZ_DATA);
+                
+                console.log('Step 2: Generating questions...');
+                generateQuestions();
+                console.log('Questions generated successfully');
+                
+                console.log('Step 3: Switching screens...');
+                const startScreen = document.getElementById('startScreen');
+                const quizScreen = document.getElementById('quizScreen');
+                const timer = document.getElementById('timer');
+                
+                console.log('Elements found:', { startScreen, quizScreen, timer });
+                
+                if (startScreen && quizScreen && timer) {
+                    startScreen.classList.add('hidden');
+                    quizScreen.classList.remove('hidden');
+                    timer.classList.remove('hidden');
+                    console.log('Screen switch completed');
+                } else {
+                    throw new Error('Required elements not found');
+                }
+                
+                console.log('Step 4: Starting timer...');
+                startTime = new Date();
+                startTimer();
+                console.log('Quiz started successfully at:', startTime);
+                
+                showInlineMessage('Kuiz telah dimulakan! Semoga berjaya!', 'success');
+                
+            } catch (error) {
+                console.error('Error starting quiz:', error);
+                console.error('Error stack:', error.stack);
+                showInlineMessage(`Ralat memulakan kuiz: ${error.message}. Sila cuba lagi.`, 'error');
+            }
         }
 
         function startTimer() {
@@ -601,84 +552,397 @@
             }, 1000);
         }
 
+        function generateQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            
+            let globalQuestionNumber = 1;
+            
+            QUIZ_DATA.sections.forEach(section => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section';
+                
+                let sectionHTML = `<div class="section-title">${section.title}</div>`;
+                
+                // Add instruction
+                if (section.instruction) {
+                    sectionHTML += `<div class="material"><p><strong>${section.instruction}</strong></p></div>`;
+                }
+                
+                // Add content (for reading passages)
+                if (section.content) {
+                    sectionHTML += `<div class="material" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+                        <h4 style="color: #856404; margin-top: 0;">Petikan:</h4>
+                        <p>${section.content}</p>
+                    </div>`;
+                }
+                
+                // Add content1 and content2 (for dual materials)
+                if (section.content1 && section.content2) {
+                    sectionHTML += `
+                        <div class="material" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+                            <h4 style="color: #856404; margin-top: 0;">Bahan 1:</h4>
+                            <p>${section.content1}</p>
+                        </div>
+                        <div class="material" style="background: #d1ecf1; border-left: 4px solid #17a2b8;">
+                            <h4 style="color: #0c5460; margin-top: 0;">Bahan 2:</h4>
+                            <p>${section.content2}</p>
+                        </div>
+                    `;
+                }
+                
+                sectionDiv.innerHTML = sectionHTML;
+                
+                section.items.forEach((item, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question-card';
+                    
+                    let questionHTML = `
+                        <div class="question-number">Soalan ${globalQuestionNumber}:</div>
+                        <p>${item.q}</p>
+                    `;
+                    
+                    switch(item.type) {
+                        case 'mcq':
+                            questionHTML += generateMCQHTML(item);
+                            break;
+                        case 'text':
+                            questionHTML += generateTextHTML(item);
+                            break;
+                        case 'order':
+                            questionHTML += generateOrderHTML(item);
+                            break;
+                        case 'judge':
+                            questionHTML += generateJudgeHTML(item);
+                            break;
+                    }
+                    
+                    questionDiv.innerHTML = questionHTML;
+                    sectionDiv.appendChild(questionDiv);
+                    globalQuestionNumber++;
+                });
+                
+                container.appendChild(sectionDiv);
+            });
+            
+            // Initialize interactive elements
+            initializeOrderQuestions();
+            initializeJudgeQuestions();
+        }
+
+
+
+        function generateMCQHTML(item) {
+            return `
+                <div class="mcq-options">
+                    ${item.options.map(option => `
+                        <div class="mcq-option">
+                            <input type="radio" name="${item.id}" value="${option.charAt(0)}" id="${item.id}_${option.charAt(0)}">
+                            <label for="${item.id}_${option.charAt(0)}">${option}</label>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function generateTextHTML(item) {
+            return `
+                <input type="text" class="text-input" id="${item.id}" placeholder="Masukkan jawapan anda di sini...">
+            `;
+        }
+
+        function generateOrderHTML(item) {
+            return `
+                <div class="order-container" data-question-id="${item.id}">
+                    <div class="order-labels">
+                        <div><strong>Perkataan yang tersedia:</strong></div>
+                    </div>
+                    <div class="tokens-available" id="${item.id}_available">
+                        ${item.tokens.map(token => `
+                            <span class="token" data-token="${token}">${token}</span>
+                        `).join('')}
+                    </div>
+                    <div class="order-labels">
+                        <div><strong>Susunan jawapan anda:</strong></div>
+                    </div>
+                    <div class="tokens-selected" id="${item.id}_selected">
+                        <em>Klik perkataan di atas untuk menyusun jawapan</em>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateJudgeHTML(item) {
+            return `
+                <div class="judge-container" data-question-id="${item.id}">
+                    <div class="judge-labels">
+                        <div class="judge-label" draggable="true" data-value="1">BETUL</div>
+                        <div class="judge-label false" draggable="true" data-value="0">SALAH</div>
+                    </div>
+                    <div class="judge-statements">
+                        ${item.s.map((statement, index) => `
+                            <div class="judge-statement" data-statement-index="${index}">
+                                <span>${statement[0]}</span>
+                                <div class="drop-zone"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function initializeOrderQuestions() {
+            document.querySelectorAll('.order-container').forEach(container => {
+                const questionId = container.dataset.questionId;
+                const availableDiv = container.querySelector(`#${questionId}_available`);
+                const selectedDiv = container.querySelector(`#${questionId}_selected`);
+                
+                availableDiv.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('token')) {
+                        moveTokenToSelected(e.target, selectedDiv, availableDiv);
+                    }
+                });
+                
+                selectedDiv.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('token')) {
+                        moveTokenToAvailable(e.target, availableDiv, selectedDiv);
+                    }
+                });
+            });
+        }
+
+        function moveTokenToSelected(token, selectedDiv, availableDiv) {
+            const clonedToken = token.cloneNode(true);
+            clonedToken.classList.add('selected');
+            
+            if (selectedDiv.querySelector('em')) {
+                selectedDiv.innerHTML = '';
+            }
+            
+            selectedDiv.appendChild(clonedToken);
+            token.remove();
+        }
+
+        function moveTokenToAvailable(token, availableDiv, selectedDiv) {
+            const clonedToken = token.cloneNode(true);
+            clonedToken.classList.remove('selected');
+            
+            availableDiv.appendChild(clonedToken);
+            token.remove();
+            
+            if (selectedDiv.children.length === 0) {
+                selectedDiv.innerHTML = '<em>Klik perkataan di atas untuk menyusun jawapan</em>';
+            }
+        }
+
+        function initializeJudgeQuestions() {
+            document.querySelectorAll('.judge-container').forEach(container => {
+                const labels = container.querySelectorAll('.judge-label');
+                const statements = container.querySelectorAll('.judge-statement');
+                
+                labels.forEach(label => {
+                    label.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', label.dataset.value);
+                        e.dataTransfer.setData('text/html', label.outerHTML);
+                        label.classList.add('dragging');
+                    });
+                    
+                    label.addEventListener('dragend', () => {
+                        label.classList.remove('dragging');
+                    });
+                });
+                
+                statements.forEach(statement => {
+                    statement.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        statement.classList.add('drag-over');
+                    });
+                    
+                    statement.addEventListener('dragleave', () => {
+                        statement.classList.remove('drag-over');
+                    });
+                    
+                    statement.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        statement.classList.remove('drag-over');
+                        
+                        const value = e.dataTransfer.getData('text/plain');
+                        const labelHTML = e.dataTransfer.getData('text/html');
+                        
+                        const dropZone = statement.querySelector('.drop-zone');
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = labelHTML;
+                        const newLabel = tempDiv.firstChild;
+                        newLabel.classList.add('assigned-label');
+                        newLabel.draggable = false;
+                        
+                        dropZone.innerHTML = '';
+                        dropZone.appendChild(newLabel);
+                    });
+                });
+            });
+        }
+
+        function collectAnswers() {
+            userAnswers = {};
+            
+            QUIZ_DATA.sections.forEach(section => {
+                section.items.forEach(item => {
+                    switch(item.type) {
+                        case 'mcq':
+                            const selectedOption = document.querySelector(`input[name="${item.id}"]:checked`);
+                            userAnswers[item.id] = selectedOption ? selectedOption.value : '';
+                            break;
+                            
+                        case 'text':
+                            const textInput = document.getElementById(item.id);
+                            userAnswers[item.id] = textInput.value.trim();
+                            break;
+                            
+                        case 'order':
+                            const selectedTokens = document.querySelectorAll(`#${item.id}_selected .token`);
+                            const tokens = Array.from(selectedTokens).map(token => token.dataset.token);
+                            userAnswers[item.id] = tokens.join(' ').toLowerCase();
+                            break;
+                            
+                        case 'judge':
+                            const container = document.querySelector(`[data-question-id="${item.id}"]`);
+                            const statements = container.querySelectorAll('.judge-statement');
+                            const judgments = [];
+                            
+                            statements.forEach(statement => {
+                                const assignedLabel = statement.querySelector('.assigned-label');
+                                const value = assignedLabel ? assignedLabel.dataset.value : '';
+                                judgments.push(value);
+                            });
+                            
+                            userAnswers[item.id] = judgments;
+                            break;
+                    }
+                });
+            });
+        }
+
+        function calculateScore() {
+            let totalScore = 0;
+            let maxScore = 0;
+            const results = [];
+            
+            QUIZ_DATA.sections.forEach(section => {
+                section.items.forEach(item => {
+                    const weight = item.w || 1;
+                    maxScore += weight;
+                    
+                    let isCorrect = false;
+                    const userAnswer = userAnswers[item.id];
+                    
+                    switch(item.type) {
+                        case 'mcq':
+                            isCorrect = userAnswer === item.key;
+                            break;
+                            
+                        case 'text':
+                            const acceptableAnswers = item.acc.map(ans => ans.toLowerCase().trim());
+                            isCorrect = acceptableAnswers.includes(userAnswer.toLowerCase());
+                            break;
+                            
+                        case 'order':
+                            isCorrect = userAnswer === item.key.toLowerCase();
+                            break;
+                            
+                        case 'judge':
+                            const correctAnswers = item.s.map(s => s[1].toString());
+                            isCorrect = JSON.stringify(userAnswer) === JSON.stringify(correctAnswers);
+                            break;
+                    }
+                    
+                    if (isCorrect) {
+                        totalScore += weight;
+                    }
+                    
+                    results.push({
+                        q: item.id,
+                        type: item.type,
+                        value: userAnswer,
+                        correct: getCorrectAnswer(item),
+                        isCorrect: isCorrect
+                    });
+                });
+            });
+            
+            return {
+                score: totalScore,
+                maxScore: maxScore,
+                percent: Math.round((totalScore / maxScore) * 100),
+                results: results
+            };
+        }
+
+        function getCorrectAnswer(item) {
+            switch(item.type) {
+                case 'mcq':
+                    return item.key;
+                case 'text':
+                    return item.acc.join(' / ');
+                case 'order':
+                    return item.key;
+                case 'judge':
+                    return item.s.map(s => s[1] ? 'BETUL' : 'SALAH').join(', ');
+                default:
+                    return '';
+            }
+        }
+
         function submitQuiz() {
-            // Hentikan pemasa
+            // Stop timer
             clearInterval(timerInterval);
             const endTime = new Date();
             const duration = Math.floor((endTime - startTime) / 1000);
             
-            // Kumpul jawapan
-            const answers = [];
-            let score = 0;
+            // Collect answers
+            collectAnswers();
             
-            for (let i = 1; i <= 10; i++) {
-                const questionName = `q${i}`;
-                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
-                const chosen = selectedOption ? selectedOption.value : '';
-                const correct = correctAnswers[questionName];
-                const isCorrect = chosen === correct;
-                
-                if (isCorrect) score++;
-                
-                answers.push({
-                    q: i,
-                    chosen: chosen,
-                    correct: correct,
-                    isCorrect: isCorrect
-                });
-            }
+            // Calculate score
+            const scoreData = calculateScore();
             
-            const percent = Math.round((score / 10) * 100);
-            
-            // Simpan data keputusan
-            quizData.score = score;
-            quizData.percent = percent;
+            // Store results
+            quizData.score = scoreData.score;
+            quizData.maxScore = scoreData.maxScore;
+            quizData.percent = scoreData.percent;
             quizData.duration_sec = duration;
-            quizData.answers = answers;
+            quizData.results = scoreData.results;
             
-            // Papar keputusan
-            displayResults(score, percent, duration, answers);
+            // Display results
+            displayResults(scoreData, duration);
             
-            // Hantar ke Google Sheets
+            // Send to Google Sheets
             sendToGoogleSheets();
             
-            // Tukar ke skrin keputusan
+            // Switch to results screen
             document.getElementById('quizScreen').classList.add('hidden');
             document.getElementById('resultScreen').classList.remove('hidden');
         }
 
-        function displayResults(score, percent, duration, answers) {
+        function displayResults(scoreData, duration) {
             const minutes = Math.floor(duration / 60);
             const seconds = duration % 60;
             
-            document.getElementById('scoreDisplay').textContent = `${score}/10 (${percent}%)`;
+            document.getElementById('scoreDisplay').textContent = 
+                `${scoreData.score}/${scoreData.maxScore} (${scoreData.percent}%)`;
             document.getElementById('timeDisplay').innerHTML = 
                 `<p><strong>Masa Diambil:</strong> ${minutes} minit ${seconds} saat</p>`;
             
-            let detailsHTML = '<h3>Analisis Jawapan:</h3>';
+            let detailsHTML = '<h3>Butiran Jawapan:</h3>';
             
-            const questionTexts = [
-                'Haziq memimpin warga emas itu ketika melintas ________.',
-                'Tong sampah di dapur itu berbau ________ kerana minyak lama.',
-                'Pilih ayat yang betul.',
-                'Siapakah yang menyambut hari lahir kesembilan?',
-                'Pilih pernyataan yang benar.',
-                'Berikut ialah hadiah yang diterima Balqis berdasarkan petikan, kecuali',
-                'Aminah dan rakan-rakan bersedia menyertai pertandingan kerana…',
-                'Penjodoh bilangan yang sesuai bagi perkataan \'sijil\' ialah…',
-                'Perkataan \'pertandingan\' boleh digantikan dengan…',
-                'Pilih pernyataan yang benar tentang Bahan 1 dan Bahan 2.'
-            ];
-            
-            answers.forEach((answer, index) => {
-                const resultClass = answer.isCorrect ? 'correct' : 'incorrect';
-                const icon = answer.isCorrect ? '✅' : '❌';
+            scoreData.results.forEach((result, index) => {
+                const resultClass = result.isCorrect ? 'correct' : 'incorrect';
+                const icon = result.isCorrect ? '✅' : '❌';
                 
                 detailsHTML += `
                     <div class="result-item ${resultClass}">
-                        <strong>${icon} Soalan ${answer.q}:</strong> ${questionTexts[index]}<br>
-                        <strong>Jawapan Anda:</strong> ${answer.chosen || 'Tidak dijawab'}<br>
-                        <strong>Jawapan Betul:</strong> ${answer.correct}
+                        <strong>${icon} Soalan ${index + 1} (${result.type.toUpperCase()}):</strong><br>
+                        <strong>Jawapan Anda:</strong> ${formatUserAnswer(result.value, result.type)}<br>
+                        <strong>Jawapan Betul:</strong> ${result.correct}
                     </div>
                 `;
             });
@@ -686,22 +950,34 @@
             document.getElementById('detailedResults').innerHTML = detailsHTML;
         }
 
+        function formatUserAnswer(value, type) {
+            if (!value || (Array.isArray(value) && value.length === 0)) {
+                return 'Tidak dijawab';
+            }
+            
+            if (type === 'judge' && Array.isArray(value)) {
+                return value.map(v => v === '1' ? 'BETUL' : v === '0' ? 'SALAH' : 'Tidak dijawab').join(', ');
+            }
+            
+            return value.toString();
+        }
+
         function sendToGoogleSheets() {
+            const duration = quizData.duration_sec;
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            const timeFormatted = `${minutes} minit ${seconds} saat`;
+            
             const payload = {
-                timestamp: new Date().toISOString(),
-                set_id: "Set A",
                 nama: quizData.nama,
                 kelas: quizData.kelas,
                 sekolah: quizData.sekolah,
-                score: quizData.score,
-                percent: quizData.percent,
-                duration_sec: quizData.duration_sec,
-                answers: quizData.answers,
-                user_agent: navigator.userAgent
+                masa: timeFormatted,
+                markah: `${quizData.score}/${quizData.maxScore}`,
+                peratus: `${quizData.percent}%`
             };
             
-            // Hantar data ke Google Apps Script
-            if (WEB_APP_URL && WEB_APP_URL !== "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+            if (WEB_APP_URL && WEB_APP_URL !== "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL") {
                 fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -709,27 +985,26 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(payload)
+                }).then(() => {
+                    console.log('Data berjaya dihantar ke Google Sheets');
                 }).catch(error => {
-                    console.log('Data telah dihantar ke Google Sheets');
+                    console.log('Data sedang dihantar ke Google Sheets...');
                 });
             }
         }
 
         function tryAgain() {
-            // Reset semua input
+            // Reset all inputs
             document.getElementById('studentName').value = '';
             document.getElementById('studentClass').value = '';
             document.getElementById('studentSchool').value = '';
             
-            // Reset semua radio button
-            const radioButtons = document.querySelectorAll('input[type="radio"]');
-            radioButtons.forEach(radio => radio.checked = false);
-            
-            // Reset pembolehubah
+            // Reset variables
             quizData = {};
+            userAnswers = {};
             clearInterval(timerInterval);
             
-            // Kembali ke skrin mula
+            // Return to start screen
             document.getElementById('resultScreen').classList.add('hidden');
             document.getElementById('startScreen').classList.remove('hidden');
             document.getElementById('timer').classList.add('hidden');
@@ -738,6 +1013,77 @@
         function printResults() {
             window.print();
         }
+
+        function showInlineMessage(message, type = 'info') {
+            // Create inline message instead of alert
+            const messageDiv = document.createElement('div');
+            
+            let bgColor, textColor, borderColor;
+            switch(type) {
+                case 'error':
+                    bgColor = '#ffebee';
+                    textColor = '#c62828';
+                    borderColor = '#f44336';
+                    break;
+                case 'success':
+                    bgColor = '#e8f5e8';
+                    textColor = '#2e7d32';
+                    borderColor = '#4caf50';
+                    break;
+                default:
+                    bgColor = '#e3f2fd';
+                    textColor = '#1565c0';
+                    borderColor = '#2196F3';
+            }
+            
+            messageDiv.style.cssText = `
+                background: ${bgColor};
+                color: ${textColor};
+                padding: 12px;
+                border-radius: 8px;
+                margin: 10px 0;
+                border-left: 4px solid ${borderColor};
+                font-weight: bold;
+            `;
+            messageDiv.textContent = message;
+            
+            const startScreen = document.getElementById('startScreen');
+            const existingMessage = startScreen.querySelector('.inline-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            messageDiv.className = 'inline-message';
+            startScreen.insertBefore(messageDiv, startScreen.querySelector('.form-group'));
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, type === 'success' ? 2000 : 5000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners for buttons
+            document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
+            
+            // Add event listener for submit button (will be added dynamically)
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.id === 'submitQuizBtn') {
+                    submitQuiz();
+                }
+                if (e.target && e.target.id === 'tryAgainBtn') {
+                    tryAgain();
+                }
+                if (e.target && e.target.id === 'printResultsBtn') {
+                    printResults();
+                }
+            });
+            
+            // Quiz will be ready when JSON data is provided
+            console.log('Kuiz Interaktif BM Tahun 4 siap digunakan!');
+        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9929624b3363cf0c',t:'MTc2MTE0MDE5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993659d4f13a8e0c',t:'MTc2MTI3NjE1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
